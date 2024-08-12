@@ -65,23 +65,57 @@ public class StudentOperations implements StudentInterface {
      * Method to get billing information
      * @return billing information
      */
-    public String getBillingInfo(Student student) {
-        //return student.getBilling().infoAboutPay();
-    	Billing billing=sdi.getBillingInfo(student);
-    	String status="Pending";
-    	if(billing.isStatus())status="Completed";
-    	return billing.getBillingID()+":"+billing.getBillamt()+":"+status;
+	public String getBillingInfo(Student student) {
+        Billing billing = sdi.getBillingInfo(student);
+        String status = "Pending";
+        if (billing.isStatus()) status = "Completed";
+        return billing.getBillingID() + ":" + billing.getBillamt() + ":" + status;
     }
+
+	/**
+	 * Method to make a payment for the student
+	 * @param student: Student object
+	 * @param amount: amount to be paid
+	 * @param paymentType: type of payment (e.g., CreditCard, NetBanking)
+	 * @return confirmation message
+	 */
+	public String makePayment(Student student, float amount, String paymentType) {
+	    // Retrieve billing information using the Student object
+	    Billing billing = sdi.getBillingInfo(student);
+	    
+	    if (billing == null) {
+	        return "Billing information not found for student ID: " + student.getID();
+	    }
+
+	    if (billing.isStatus()) {
+	        return "Payment already completed for billing ID: " + billing.getBillingID();
+	    }
+
+	    // Generate a unique transaction ID
+	    String transactionID = "TXN" + System.currentTimeMillis();
+	    billing.setTransactionID(transactionID);
+	    billing.setBillamt(amount);
+	    billing.setStatus(true);
+
+	    // Update billing information in the database
+	    boolean paymentSuccess = sdi.updateBillingInfo(billing);
+	    
+	    if (paymentSuccess) {
+	        return "Payment Successful. Transaction ID: " + transactionID;
+	    } else {
+	        return "Payment failed. Please try again.";
+	    }
+	}
+
 
 	@Override
 	public int getValidCount(List<String> courses) {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
 	@Override
 	public String viewCourses() {
-		// TODO Auto-generated method stub
 		String catalog="";
 		Set<Course> courses=sdi.viewCourses();
 		for (Course course : courses) {

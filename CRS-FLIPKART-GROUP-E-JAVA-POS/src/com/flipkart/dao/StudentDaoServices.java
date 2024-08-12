@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 import com.flipkart.bean.Billing;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.ReportCard;
@@ -101,27 +102,51 @@ public class StudentDaoServices implements StudentDaoInterface{
 			return null;
 		}
 	}
+	
+	
+	 @Override
+	    public Billing getBillingInfo(Student student) {
+	        try {
+	            PreparedStatement ps = conn.prepareStatement(DBQueries.GET_BILLING_INFO);
+	            ps.setString(1, student.getID()); // Assuming getID() returns the student ID
+	            ResultSet rs = ps.executeQuery();
 
-	@Override
-	public Billing getBillingInfo(Student student) {
-		// TODO Auto-generated method stub
-		try {
-			PreparedStatement ps = conn.prepareStatement(DBQueries.GET_BILLING_INFO);
-            ps.setString(1, student.getID());
-            ResultSet rs = ps.executeQuery(); 
-            rs.next();
-            Billing billingInfo=new Billing(rs.getString("billingID"),student.getID(),rs.getFloat("billAmount"),rs.getBoolean("status"));
-            
-            return billingInfo;
-            
+	            if (rs.next()) {
+	                return new Billing(
+	                        rs.getString("billingID"),
+	                        rs.getString("studentID"),
+	                        rs.getFloat("billamt"),
+	                        rs.getBoolean("status"),
+	                        rs.getString("transactionID")
+	                );
+	            } else {
+	                return null;
+	            }
+	        } catch (SQLException e) {
+	            System.err.println("Error: " + e.getMessage());
+	            return null;
+	        }
+	    }
+
+    @Override
+    public boolean updateBillingInfo(Billing billing) {
+        try {
+            PreparedStatement ps = conn.prepareStatement(DBQueries.UPDATE_BILLING_INFO);
+            ps.setFloat(1, billing.getBillamt());
+            ps.setBoolean(2, billing.isStatus());
+            ps.setString(3, billing.getTransactionID());
+            ps.setString(4, billing.getBillingID());
+
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
         } catch (SQLException e) {
-    		return null;
+            System.err.println("Error: " + e.getMessage());
+            return false;
         }
-	}
+    }
 	
 	@Override
 	public Set<Course> viewCourses() {
-		// TODO Auto-generated method stub
 		try {
 			Set<Course> courseList = new HashSet<Course>();
             PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);

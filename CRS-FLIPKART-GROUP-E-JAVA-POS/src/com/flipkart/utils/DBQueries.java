@@ -64,4 +64,7 @@ public class DBQueries {
 	public static final String GET_PROFESSOR_COURSEID="SELECT courseProf FROM catalog WHERE courseID=?";
 
 	public static final String CHECK_STUDENT_COURSE="SELECT studentID FROM registeredCourse WHERE courseID=? AND studentID=? ";
+	
+	public static final String UPDATE_BILLING_INFO = "UPDATE billing SET billamt = ?, status = ?, transactionID = ? WHERE billingID = ?";
+
 }

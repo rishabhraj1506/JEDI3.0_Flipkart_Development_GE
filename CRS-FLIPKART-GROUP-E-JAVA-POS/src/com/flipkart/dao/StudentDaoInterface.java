@@ -18,4 +18,6 @@ public interface StudentDaoInterface {
 	public ReportCard getReport(Student student);
 	
 	public Billing getBillingInfo(Student student);
+
+	boolean updateBillingInfo(Billing billing);
 }
