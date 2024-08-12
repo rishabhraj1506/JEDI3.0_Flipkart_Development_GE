@@ -14,10 +14,10 @@ public class Student extends User {
 
     private String branch;
     private int rollNum;
-    private List<Course> registeredCourses; // List of courses registered by the student
-    private Billing billing; // Aggregated Billing object
-    private ReportCard report;
-    private boolean status;
+    private List<String> registeredCourses; // List of courses registered by the student
+/*    private Billing billing; // Aggregated Billing object
+    private ReportCard report;*/
+    private boolean approved;
     /**
      * Parameterized constructor
      * @param ID: the student ID
@@ -28,14 +28,14 @@ public class Student extends User {
      * @param rollNum: the roll number of the student
      * @param billing: the billing information of the student
      */
-    public Student(String ID, String name, String contact, String email, String branch, int rollNum, Billing billing, String password) {
+    public Student(String ID, String name, String contact, String email, String branch, int rollNum, boolean approved, String password) {
         super(ID, name, "Student", contact, email, password);
         this.branch = branch; 
         this.rollNum = rollNum;
         this.registeredCourses = new ArrayList<>();
-        this.billing = billing;
-        this.report=new ReportCard(ID);
-        this.status=false;
+//        this.billing = billing;
+//        this.report=new ReportCard(ID);
+        this.approved=approved;
     }
 
     // Getters and Setters for branch, rollNum, and billing
@@ -55,26 +55,26 @@ public class Student extends User {
         this.rollNum = rollNum;
     }
 
-    public Billing getBilling() {
+/*    public Billing getBilling() {
         return billing;
     }
 
     public void setBilling(Billing billing) {
         this.billing = billing;
-    }
+    }*/
     
-    @Override
+    //@Override
     public void update() {
         // Code to update student information
     }
 
-    @Override
+    //@Override
     public void changePassword(String password) {
         // Code to change student password
     	super.setPassword(password);
     }
     
-    public void updateGrade(String courseID, String grade) {
+/*    public void updateGrade(String courseID, String grade) {
     	report.addOrUpdateGrade(courseID, grade);
     }
     
@@ -84,9 +84,9 @@ public class Student extends User {
     	for(Course course:registeredCourses) {
     		reportCard=reportCard.concat(course.getCourseName()+" "+grades.get(course.getCourseID()));
     	}return reportCard;
-    }
+    }*/
     
-    public List<Course> courseList(){
+    public List<String> courseList(){
     	return registeredCourses; 
     }
    /* @Override
@@ -94,17 +94,16 @@ public class Student extends User {
         // Code for student login
     }*/
 
-	public void addCourse(Course course) {
+	public void addCourse(String courseID) {
 		// TODO Auto-generated method stub
-		registeredCourses.add(course);
-		course.addStudent(this);
+		registeredCourses.add(courseID);
 	}
 
-	public boolean isStatus() {
-		return status;
+	public boolean isApproved() {
+		return approved;
 	}
 
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setApproved(boolean status) {
+		this.approved = status;
 	}
 }

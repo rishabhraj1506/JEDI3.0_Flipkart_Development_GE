@@ -15,7 +15,7 @@ public interface UserInterface {
 	
 	public boolean changePassword(String username, String password, String newPassword);
 	
-	public boolean registerStudent(String username, Student student);
+	public String registerStudent(String username, String name, String contact, String email, String password, String branch);
 	
 	public User findByID(String id);
 	

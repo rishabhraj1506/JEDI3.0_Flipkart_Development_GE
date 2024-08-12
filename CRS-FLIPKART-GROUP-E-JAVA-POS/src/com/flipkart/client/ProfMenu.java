@@ -45,20 +45,11 @@ public class ProfMenu {
 
 	private void offerCourse(Prof prof) {
 		// TODO Auto-generated method stub
-		Catalog catalog=ClientApplication.getCatalog();
 		System.out.println("Enter Course ID from the following:");
-		for(Course course:catalog.getCourses()) {
-			System.out.println(course.getCourseID()+" "+course.getCourseName()+" "+course.getCourseProf());
-		}Scanner s= new Scanner(System.in);
-		String cid=s.next();
-		Course course=null;
-		for(Course tempCourse:catalog.getCourses()) {
-			if(cid.equals(tempCourse.getCourseID())) {
-				course=tempCourse;
-				break;
-			}
-		}
-		profService.offerCourse(course,prof);
+		System.out.println(profService.viewCourses());
+		Scanner s= new Scanner(System.in);
+		String courseID=s.next();
+		System.out.println(profService.offerCourse(courseID,prof));
 	}
 
 	private void viewRegisteredStudent(Prof prof) {
@@ -66,10 +57,8 @@ public class ProfMenu {
 		System.out.println("Course ID:");
 		Scanner s= new Scanner(System.in);
 		String courseID=s.next();
-		Set<Student> lst=profService.getStudents(courseID,prof);
-		for(Student stu:lst) {
-			System.out.println(stu.getName()+" "+stu.getID());
-		}
+		String studentList=profService.getStudents(courseID,prof);
+		System.out.println(studentList);
 	}
 
 	private void submitGrade(Prof prof) {
@@ -81,7 +70,7 @@ public class ProfMenu {
 		String studentID=s.next();
 		System.out.println("Grade:");
 		String grade=s.next();
-		profService.giveGrade(courseID, studentID, grade, prof);
+		System.out.println(profService.giveGrade(courseID, studentID, grade, prof));
 		
 	}
 	

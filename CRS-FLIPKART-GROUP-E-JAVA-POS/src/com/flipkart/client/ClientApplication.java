@@ -36,17 +36,7 @@ public class ClientApplication {
 				username=s.next();
 				System.out.println("Enter the Password :--");
 				password=s.next();
-				User user=userInstance.retrieve(username, password);
-				if(user.getRole().equals("Student")) {
-					StudentMenu studentOps=new StudentMenu();
-					studentOps.studentMenu((Student)user);
-				}else if(user.getRole().equals("Professor")) {
-					ProfMenu profops= new ProfMenu();
-					profops.professorMenu((Prof)user);
-				}else if(user.getRole().equals("Admin")) {
-					AdminMenu adminops=new AdminMenu();
-					adminops.adminMenu((Admin)user);
-				}
+				login(username,password);
 				break;
 			case 2:
 				studentRegistraion();
@@ -62,19 +52,40 @@ public class ClientApplication {
 		}
 	}
 	
-
+	public static void login(String username,String password) {
+		User user=userInstance.retrieve(username, password);
+		if(user.equals(null))System.out.println("Wrong username or password exiting main menu...");
+		if(user.getRole().equals("Student")){
+			if(!((Student)user).isApproved())return;
+			StudentMenu studentOps=new StudentMenu();
+			studentOps.studentMenu((Student)user);
+		}else if(user.getRole().equals("Professor")) {
+			ProfMenu profops= new ProfMenu();
+			profops.professorMenu((Prof)user);
+		}else if(user.getRole().equals("Admin")) {
+			AdminMenu adminops=new AdminMenu();
+			adminops.adminMenu((Admin)user);
+		}
+	}
+	
 	public static void studentRegistraion() {
 		Scanner s=new Scanner(System.in);
 		System.out.println("Enter Username :");
 		String username=s.next();
+		s.nextLine();
 		System.out.println("Enter Name :");
 		String name=s.nextLine();
-		System.out.println("Enter Details in following format: \n<ID> <contact> <email> <branch> <roll number> <password");
-		String ID=s.next(), contact=s.next(), email=s.next(), branch= s.next();
-		int rollNum=s.nextInt();
-		String password=s.next();
-		Student student=new Student(ID,name,contact,email,branch,rollNum,null,password);
-		userInstance.registerStudent(username,student);		
+		System.out.println("Enter Details in following format: \n<contact> <email> <branch> <password>");
+		
+		String details = s.nextLine();
+        
+        // Split the details input into separate fields
+        String[] detailsArray = details.split(" ");
+        
+		String contact=detailsArray[0], email=detailsArray[1], 
+				branch= detailsArray[2],password=detailsArray[3];
+		//Student student=new Student(ID,name,contact,email,branch,rollNum,false,password);
+		System.out.println(userInstance.registerStudent(username,name,contact,email,password,branch));		
 		
 	}
 	
@@ -87,10 +98,7 @@ public class ClientApplication {
 		password=s.next();
 		System.out.println("Enter new Password :--");
 		String newPassword=s.next();
-		userInstance.changePassword(username,password,newPassword);
-		
-		
-		
+		if(userInstance.changePassword(username,password,newPassword))System.out.println("Password changed successfully");
 	}
 	
 	public static UserOperations getUsers() {

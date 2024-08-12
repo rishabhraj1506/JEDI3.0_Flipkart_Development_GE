@@ -55,10 +55,10 @@ public class AdminMenu {
 		Scanner s=new Scanner(System.in);
 		UserOperations userInstance=ClientApplication.getUsers();
 		userInstance.printUsers();
-		String studentID=s.next();
 		System.out.println("Student ID for approval:");
-		Student student=(Student) userInstance.findByID(studentID);
-		adminService.registerStudent(student);
+		String studentID=s.next();
+		//Student student=(Student) userInstance.findByID(studentID);
+		adminService.registerStudent(studentID);
 	}
 
 	private void removeCourse(Admin admin) {
@@ -66,19 +66,19 @@ public class AdminMenu {
 		System.out.println("Course Code to be removed:");
 		Scanner s=new Scanner(System.in);
 		String courseID=s.next();
-		Catalog catalog=ClientApplication.getCatalog();
-		adminService.removeCourse(courseID, catalog);
+		//Catalog catalog=ClientApplication.getCatalog();
+		System.out.println(adminService.removeCourse(courseID));
 	}
 
 	private void addCourse(Admin admin) {
 		// TODO Auto-generated method stub
-		Catalog catalog=ClientApplication.getCatalog();
-		System.out.println("Enter Course details in following format:\n<courseID> <courseName> <seats>");
+		System.out.println("Enter Course details in following format:\n<courseID> <courseName> <seats> <price>");
 		Scanner s=new Scanner(System.in);
 		String courseID=s.next(), courseName=s.next();
 		int seats=s.nextInt();
-		Course course=new Course(courseID,courseName,null,seats);
-		adminService.addCourse(course, catalog);
+		float price=s.nextFloat();
+		Course course=new Course(courseID,courseName,null,seats,price);
+		System.out.println(adminService.addCourse(course));
 	}
 
 	private void updateCourse(Admin admin) {
@@ -87,14 +87,15 @@ public class AdminMenu {
 		Scanner s=new Scanner(System.in);
 		System.out.println("Enter old courseID");
 		String oldCourseID=s.next();
-		System.out.println("Enter Course details in following format:\n<courseID> <courseName> <seats> <profID>");
+		System.out.println("Enter Course details in following format:\n<courseID> <courseName> <seats> <profID> <price>");
 		String courseID=s.next(), courseName=s.next();
 		int seats=s.nextInt();
 		String profID=s.next();
-		UserOperations userInstance=ClientApplication.getUsers();
-		Prof prof = (Prof) userInstance.findByID(profID);
-		Course course=new Course(courseID,courseName,prof,seats);
-		adminService.updateCourse(oldCourseID, course, catalog);
+		float price=s.nextFloat();
+		//UserOperations userInstance=ClientApplication.getUsers();
+		//Prof prof = (Prof) userInstance.findByID(profID);
+		Course course=new Course(courseID,courseName,profID,seats,price);
+		adminService.updateCourse(oldCourseID, course);
 	}
 
 	private void removeProf(Admin admin) {
@@ -102,19 +103,19 @@ public class AdminMenu {
 		System.out.println("User ID for professor removal:");
 		Scanner s=new Scanner(System.in);
 		String profID=s.next();
-		UserOperations userInstance=ClientApplication.getUsers();
-		User prof = userInstance.findByID(profID);
-		adminService.removeProf(prof);
+		//UserOperations userInstance=ClientApplication.getUsers();
+		//User prof = userInstance.findByID(profID);
+		adminService.removeProf(profID);
 	}
 
 	private void addProf(Admin admin) {
 		// TODO Auto-generated method stub
-		System.out.println("Enter Prof details in following format:\n<username> <profID> <profName> <contact> <email> <dept> <qualification> <password>");
+		System.out.println("Enter Prof details in following format:\n<username> <profName> <contact> <email> <dept> <qualification> <password>");
 		Scanner s=new Scanner(System.in);
-		String username=s.next(),profID=s.next(),profName=s.next(),contact=s.next(),email=s.next(),dept=s.next(),qualification=s.next(),password=s.next();
-		UserOperations userInstance=ClientApplication.getUsers();
-		Prof prof=new Prof(profID,profName,contact,email,dept,qualification,password);
-		adminService.addProf(prof,userInstance,username);
+		String username=s.next(),profName=s.next(),contact=s.next(),email=s.next(),dept=s.next(),qualification=s.next(),password=s.next();
+		//UserOperations userInstance=ClientApplication.getUsers();
+		Prof prof=new Prof(null,profName,contact,email,dept,qualification,password);
+		System.out.println(adminService.addProf(prof,username));
 	}
 
 }

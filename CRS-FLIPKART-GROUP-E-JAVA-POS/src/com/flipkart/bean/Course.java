@@ -8,10 +8,11 @@ public class Course {
 
 	private String courseID;
 	private String courseName;
-	Prof courseProf;
+	String courseProf;
 	private int seats;
-	private Set<Student> enrolledStudents; // To keep track of enrolled students
-	
+	String semesterID;
+	private Set<String> enrolledStudents; // To keep track of enrolled students
+	float price;
 	/**
 	 * Default Constructor
 	 */
@@ -26,13 +27,26 @@ public class Course {
 	 * @param courseProf: professor user id
 	 * @param seats: seats available 
 	 */
-	public Course(String courseID, String courseName, Prof courseProf, int seats) {
+	public Course(String courseID, String courseName, String courseProf, int seats) {
 		super();
 		this.courseID = courseID;
 		this.courseName = courseName;
 		this.courseProf = courseProf;
 		this.seats = seats;
 		this.enrolledStudents = new HashSet<>();
+		this.semesterID=null;
+		this.price=0;
+	}
+	
+	public Course(String courseID, String courseName, String courseProf, int seats, float price) {
+		super();
+		this.courseID = courseID;
+		this.courseName = courseName;
+		this.courseProf = courseProf;
+		this.seats = seats;
+		this.enrolledStudents = new HashSet<>();
+		this.semesterID=null;
+		this.price=price;
 	}
 	
 	/**
@@ -87,7 +101,7 @@ public class Course {
 	 * Method to get Professor ID of the professor teaching the course
 	 * @return Professor ID
 	 */
-	public Prof getCourseProf() {
+	public String getCourseProf() {
 		return courseProf;
 	}
 	
@@ -95,7 +109,7 @@ public class Course {
 	 * Method to set Professor ID of the professor teaching the course
 	 * @param courseProf
 	 */
-	public void setCourseProf(Prof courseProf) {
+	public void setCourseProf(String courseProf) {
 		this.courseProf = courseProf;
 	}
 	
@@ -103,18 +117,34 @@ public class Course {
 		return enrolledStudents.size() >= seats;
 	}
 	
+	public String getSemesterID() {
+		return this.semesterID;
+	}
+	
+	public void setSemesterID(String semesterID) {
+		this.semesterID=semesterID;
+	}
+	
 	/**
 	 * Method to add a student to the course
 	 * @param student: the student to be added
 	 * @return true if the student was added successfully, false if the course is full
 	 */
-	public boolean addStudent(Student student) {
+	public boolean addStudent(String studentID) {
 		if (!isCourseFull()) {
-			return enrolledStudents.add(student);
+			return enrolledStudents.add(studentID);
 		}
 		return false; // Course is full
 	}
 	
+
+	public void setPrice(float price) {
+		this.price=price;
+	}
+	
+	public float getPrice() {
+		return this.price;
+	}
 	/**
 	 * Method to determine if the course can be canceled
 	 * @return true if the course can be canceled, false otherwise
@@ -124,7 +154,7 @@ public class Course {
 		return enrolledStudents.isEmpty();
 	}
 	
-	public Set<Student> getStudents(){
+	public Set<String> getStudents(){
 		return enrolledStudents;
 	}
 }

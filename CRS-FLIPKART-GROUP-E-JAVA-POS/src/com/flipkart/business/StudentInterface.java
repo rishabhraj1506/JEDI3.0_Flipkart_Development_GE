@@ -7,13 +7,15 @@ import com.flipkart.bean.Student;
 
 public interface StudentInterface {
 
-	public boolean register(Student student, List<Course> courses);
+	public String register(Student student, List<String> courses);
 	
-	public int getValidCount(List<Course> courses);
+	public int getValidCount(List<String> courses);
 	
-	public List<Course> viewCourses(Student student);
+	public String viewCoursesEnrolled(Student student);
 	
 	public String getReport(Student student);
 	
 	public String getBillingInfo(Student student);
+	
+	public String viewCourses();
 }

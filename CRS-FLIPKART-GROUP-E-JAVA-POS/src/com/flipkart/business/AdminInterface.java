@@ -8,15 +8,15 @@ import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
 
 public interface AdminInterface {
-	public void addProf(Prof prof, UserOperations userInstance, String username);
+	public String addProf(Prof prof, String username);
 	
-	public boolean removeProf(User prof);
+	public String removeProf(String profID);
 	
-	public boolean updateCourse(String courseCode, Course updatedCourse, Catalog catalog);
+	public String updateCourse(String courseCode, Course updatedCourse);
 	
-	public void addCourse(Course course,Catalog catalog);
+	public String addCourse(Course course);
 	
-	public boolean removeCourse(String courseCode, Catalog catalog);
+	public String removeCourse(String courseID);
 	
-	public void registerStudent(Student student);
+	public String registerStudent(String studentID);
 }

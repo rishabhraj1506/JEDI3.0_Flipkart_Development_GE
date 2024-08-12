@@ -9,9 +9,10 @@ package com.flipkart.bean;
 public class Billing {
 
     private String billingID;
-    private int studentID;
+    private String studentID;
     private float billamt;
     private boolean status; // true for paid, false for unpaid
+    private String transactionID;
 
     /**
      * Parameterized constructor
@@ -20,11 +21,12 @@ public class Billing {
      * @param billamt: amount to be billed
      * @param status: payment status
      */
-    public Billing(String billingID, int studentID, float billamt, boolean status) {
+    public Billing(String billingID, String studentID, float billamt, boolean status) {
         this.billingID = billingID;
         this.studentID = studentID;
         this.billamt = billamt;
         this.status = status;
+        this.setTransactionID(null);
     }
 
     // Getters and Setters
@@ -36,11 +38,11 @@ public class Billing {
         this.billingID = billingID;
     }
 
-    public int getStudentID() {
+    public String getStudentID() {
         return studentID;
     }
 
-    public void setStudentID(int studentID) {
+    public void setStudentID(String studentID) {
         this.studentID = studentID;
     }
 
@@ -64,8 +66,12 @@ public class Billing {
      * Method to provide information about the payment
      * @return information about the payment
      */
-    public String infoAboutPay() {
-        return String.format("Billing ID: %s\nStudent ID: %d\nBill Amount: %.2f\nStatus: %s",
-                billingID, studentID, billamt, status ? "Paid" : "Unpaid");
-    }
+
+	public String getTransactionID() {
+		return transactionID;
+	}
+
+	public void setTransactionID(String transactionID) {
+		this.transactionID = transactionID;
+	}
 }

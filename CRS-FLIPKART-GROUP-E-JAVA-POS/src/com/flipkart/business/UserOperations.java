@@ -4,21 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.flipkart.bean.*;
+import com.flipkart.dao.UserDaoServices;
+import com.flipkart.dao.UserDaoInterface;
 
 public class UserOperations implements UserInterface{
-	Map<String,User> users =new HashMap<>();
-	
-
-	
-	public UserOperations(){
-		users.put("admin1",new Admin("admin1", "dubey", "123456789", "abc@abc.com", "abc"));
-		users.put("prof1",new Prof("prof1", "manis", "123456799", "abc2@abc.com", "arts", "postgrad", "xdd"));
-		users.put("admin2",new Admin("admin2", "duba", "123456709", "def@abc.com", "def"));
-		users.put("student1",new Student("student1", "chotu", "123356789", "stu@abc.com", "cs", 0, null, "chotu"));
-	}
-	
+	//Map<String,User> users =new HashMap<>();
+	UserDaoInterface udi=new UserDaoServices()
+;	
 	public User retrieve(String username, String password) {
-		User user=users.get(username);
+		User user=udi.getUser(username);
 		if(password.equals(user.getPassword())) {
 			return user;
 		}return null;
@@ -29,17 +23,12 @@ public class UserOperations implements UserInterface{
 	}
 	
 	public boolean changePassword(String username, String password, String newPassword){
-		User user=users.get(username);
-		if(user.getPassword().equals(password)) {
-			user.setPassword(newPassword);
-			return true;
-		}return false;
+		return udi.updatePassword(username, password, newPassword);
 	}
 	
-	public boolean registerStudent(String username, Student student) {
-		if(users.get(username).equals(null))return false;
-		users.put(username, student);
-		return true;
+	public String registerStudent(String username, String name, String contact, 
+			String email, String password, String branch) {
+		return udi.registerStudent(username, name, contact, email, password, branch);
 	}
 	
 	public User findByID(String id) {

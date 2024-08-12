@@ -4,14 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.flipkart.bean.*;
+import com.flipkart.dao.AdminDaoServices;
+import com.flipkart.dao.AdminDaoInterface;
 
 public class AdminOperations implements AdminInterface{
     /**
      * Method to add a professor
      * @param professor: the professor to add
      */
-    public void addProf(Prof prof, UserOperations userInstance, String username) {
-    	userInstance.makeNew(username,(User)prof);
+	AdminDaoInterface adi=new AdminDaoServices();
+	
+    public String addProf(Prof prof, String username) {
+		String userID=adi.addProf(prof, username);
+    	if(!userID.isEmpty())return "Professor Added with id: "+userID;
+    	return "Operation Failed...";
+    	//userInstance.makeNew(username,(User)prof);
     }
 
     /**
@@ -19,9 +26,10 @@ public class AdminOperations implements AdminInterface{
      * @param professorID: the ID of the professor to remove
      * @return true if professor was removed successfully, false otherwise
      */
-    public boolean removeProf(User prof) {
-    	prof.setRole("user");
-        return false; // Professor ID not found
+    public String removeProf(String profID) {
+    	//prof.setRole("user");
+    	if(adi.removeProf(profID))return "Professor removed successfully";
+    	return "Operation Failed..."; // Professor ID not found
     }
 
     /**
@@ -30,19 +38,22 @@ public class AdminOperations implements AdminInterface{
      * @param updatedCourse: the updated course details
      * @return true if course was updated successfully, false otherwise
      */
-    public boolean updateCourse(String courseCode, Course updatedCourse, Catalog catalog) {
-        catalog.removeCourse(courseCode);
-        catalog.addCourse(updatedCourse);
-    	return false;
+    public String updateCourse(String courseID, Course updatedCourse) {
+        //catalog.removeCourse(courseCode);
+        //catalog.addCourse(updatedCourse);
+    	if(adi.updateCourse(courseID, updatedCourse))return "Course information updated successfully";
+    	return "Operation Failed...";
     }
 
     /**
      * Method to add a course
      * @param course: the course to add
      */
-    public void addCourse(Course course,Catalog catalog) {
+    public String addCourse(Course course) {
     	//
-    	catalog.addCourse(course);
+    	//catalog.addCourse(course);
+    	if(adi.addCourse(course))return "Course added Successfully";
+    	return "Operation Failed...";
     }
 
     /**
@@ -50,15 +61,19 @@ public class AdminOperations implements AdminInterface{
      * @param courseCode: the code of the course to remove
      * @return true if course was removed successfully, false otherwise
      */
-    public boolean removeCourse(String courseCode, Catalog catalog) {
-        return catalog.removeCourse(courseCode);
+    public String removeCourse(String courseID) {
+        //return catalog.removeCourse(courseCode);
+    	if(adi.removeCourse(courseID))return "Course removed Successfully";
+    	return "Operation Failed...";
     }
 
     /**
      * Method to register a student
      * @param student: the student to register
      */
-    public void registerStudent(Student student) {
-    	student.setStatus(true);
+    public String registerStudent(String studentID) {
+    	if(adi.registerStudent(studentID))return "Student approved";
+    	return "Operation Failed...";
+    	//student.setApproved(true);
     }
 }

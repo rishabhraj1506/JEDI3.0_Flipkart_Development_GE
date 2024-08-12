@@ -3,8 +3,6 @@ package com.flipkart.client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import com.flipkart.bean.Catalog;
-import com.flipkart.bean.Course;
 import com.flipkart.bean.Student;
 import com.flipkart.business.StudentOperations;
 import com.flipkart.business.StudentInterface;
@@ -42,52 +40,44 @@ class StudentMenu {
 		}
 	}
 	
-	public String billingInfo(Student student) {
+	public void billingInfo(Student student) {
 		// TODO Auto-generated method stub
-		return studentService.getBillingInfo(student);
+		System.out.println(studentService.getBillingInfo(student));
 	}
 
-	private String viewReport(Student student) {
+	private void viewReport(Student student) {
 		// TODO Auto-generated method stub
-		return studentService.getReport(student);
+		System.out.println(studentService.getReport(student));
 	}
 
 	private void viewCourses(Student student) {
 		// TODO Auto-generated method stub
-		List<Course> list=studentService.viewCourses(student);
-		for(Course course:list) {
-			System.out.println(course.getCourseName()+":"+course.getCourseID());
-		}
+		String courses=studentService.viewCoursesEnrolled(student);
+		System.out.println(courses);
 	};
 
 	private void registerCourses(Student student) {
 		// TODO Auto-generated method stub
-		if(!student.isStatus())return ;
-		List<Course>courses=fetchCourseList();
-		if(studentService.register(student, courses))System.out.println("registration success");
-		else System.out.println("registration failed");
-	}
-	
-	private List<Course> fetchCourseList(){
-		List<Course> courses=new ArrayList<Course>();
-		Catalog catalog=ClientApplication.getCatalog();
+		if(!student.isApproved())return ;
+		List<String>courses=new ArrayList<String>();
 		for(int count=0; count<6; count++) {
+			System.out.println(studentService.viewCourses());
 			if(count<4)System.out.println("Select primary course "+(count+1)+" from catalog:");
 			else System.out.println("Select secondary course "+(count-3)+" from catalog:");
-			for(Course course:catalog.getCourses()) {
-				System.out.println(course.getCourseID()+" "+course.getCourseName()+" "+course.getCourseProf());
-			}Scanner s= new Scanner(System.in);
-			String cid=s.next();
-			Course course=null;
-			for(Course tempCourse:catalog.getCourses()) {
-				if(cid.equals(tempCourse.getCourseID())) {
-					course=tempCourse;
-					break;
-				}
-			}
-			courses.add(course);
+			Scanner s= new Scanner(System.in);
+			String courseID=s.next();
+			courses.add(courseID);
 		}
-		return courses;
+		String registered=studentService.register(student, courses);
+		/*String[] splitArray = registered.split("\n");
+		String floatval=splitArray[splitArray.length-1].split(" ")[1];
+		float price=Float.parseFloat(floatval);
+		*/
+		System.out.println("Following courses were registered successfully");
+		System.out.println(registered);
+		
+		//if(studentService.register(student, courses))System.out.println("registration success");
+		//else System.out.println("registration failed");
 	}
 
 }

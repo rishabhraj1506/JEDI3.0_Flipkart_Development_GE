@@ -1,7 +1,9 @@
 package com.flipkart.bean;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ public class Prof extends User {
     private String dept;
     private String qualification;
     //private Map<Course, Set<Student>> courseStudentMap; // Map of courses to enrolled students
-    private Map<String,Course> idCourseMap;
+    private List<String> courses;
     /**
      * Parameterized constructor
      * @param ID: the professor ID
@@ -30,7 +32,7 @@ public class Prof extends User {
         super(ID, name, "Professor", contact, email, password);
         this.dept = dept;
         this.qualification = qualification;
-        this.idCourseMap=new HashMap<>();
+        this.courses=new ArrayList();
     }
 
     // Getters and Setters for dept and qualification
@@ -50,29 +52,23 @@ public class Prof extends User {
         this.qualification = qualification;
     }
     
-    public Set<Student> getRegisteredStudents(String courseID) {
-    	for (Map.Entry<String, Course> entry : idCourseMap.entrySet()) {
-            String cid = entry.getKey();
-            Set<Student> students = entry.getValue().getStudents();
-            if(cid.equals(courseID)) {
-            	return students;
-            }
-        }return null;
+    public List<String> getCourses() {
+    	return this.courses;
     }
     
-    @Override
+    //@Override
     public void update() {
         // Code to update professor information
     }
 
-    @Override
+    //@Override
     public void changePassword(String password) {
         // Code to change professor password
     	super.setPassword(password);
     }
     
-    public void addCourse(Course course) {
-    	idCourseMap.put(course.getCourseID(), course);
+    public void addCourse(String courseID) {
+    	this.courses.add(courseID);
     }
 
     /*@Override

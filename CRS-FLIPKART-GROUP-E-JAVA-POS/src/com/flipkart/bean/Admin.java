@@ -23,12 +23,12 @@ public class Admin extends User {
         this.students = new HashMap<>();
     }
     
-    @Override
+    //@Override
     public void update() {
         // Code to update admin information
     }
     
-    @Override
+    //@Override
     public void changePassword(String password) {
         // Code to change admin password
     	super.setPassword(password);
