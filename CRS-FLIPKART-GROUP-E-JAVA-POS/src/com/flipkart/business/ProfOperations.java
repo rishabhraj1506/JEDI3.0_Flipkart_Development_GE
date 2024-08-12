@@ -71,4 +71,15 @@ public class ProfOperations implements ProfInterface{
 		}
 		return catalog;
 	}
+
+	@Override
+	public String viewCourseOffering(Prof prof) {
+		// TODO Auto-generated method stub
+		String catalog="";
+		Set<Course> courses=pdi.viewCourseOffering(prof);
+		for(Course course:courses) {
+			catalog=catalog.concat(course.getCourseID()+" "+course.getCourseName()+"\n");
+		}
+		return catalog;
+	}
 }

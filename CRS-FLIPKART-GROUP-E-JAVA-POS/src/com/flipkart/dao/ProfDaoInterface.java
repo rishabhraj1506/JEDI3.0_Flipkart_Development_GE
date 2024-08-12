@@ -14,4 +14,6 @@ public interface ProfDaoInterface {
 	public Set<Student> getStudents(String courseID, Prof prof);
 	
 	public boolean giveGrade(String courseID, String studentID, String grade, Prof prof);
+	
+	public Set<Course> viewCourseOffering(Prof prof);
 }

@@ -14,4 +14,6 @@ public interface ProfInterface {
 	public String giveGrade(String courseID, String studentID, String grade, Prof prof);
 	
 	public String viewCourses();
+	
+	public String viewCourseOffering(Prof prof);
 }

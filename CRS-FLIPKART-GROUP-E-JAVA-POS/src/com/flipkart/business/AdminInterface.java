@@ -1,6 +1,5 @@
 package com.flipkart.business;
 
-import com.flipkart.bean.Admin;
 import com.flipkart.bean.Catalog;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Prof;
@@ -19,4 +18,10 @@ public interface AdminInterface {
 	public String removeCourse(String courseID);
 	
 	public String registerStudent(String studentID);
+	
+	public String viewCourses();
+	
+	public String viewProfessors();
+	
+	public String viewUnapprovedStudents();
 }

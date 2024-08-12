@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Prof;
+import com.flipkart.bean.Student;
 import com.flipkart.utils.DBQueries;
 import com.flipkart.utils.DBUtil;
 
@@ -140,6 +143,71 @@ public class AdminDaoServices implements AdminDaoInterface{
 
         } catch (SQLException e) {
         	return false;
+        }
+	}
+
+	@Override
+	public Set<Course> viewCourses() {
+		try {
+			Set<Course> courseList = new HashSet<Course>();
+            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
+            //ps.setString(1, courseID);
+            ResultSet rs = ps.executeQuery(); 
+            
+            while(rs.next())
+            {
+            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
+            	courseList.add(course);
+            }
+            
+            return courseList;
+            
+        } catch (SQLException e) {
+    		return null;
+        }
+	}
+
+	@Override
+	public Set<Student> viewUnapprovedStudents() {
+		// TODO Auto-generated method stub
+		try {
+			Set<Student> studentList = new HashSet<Student>();
+            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_UNAPPROVED_STUDENTS);
+            ResultSet rs = ps.executeQuery(); 
+            
+            while(rs.next())
+            {
+            	Student student=new Student(rs.getString("user.userID"),rs.getString("user.name"),rs.getString("user.contact"),rs.getString("user.email"),rs.getString("student.branch"),rs.getInt("student.rollNum"),rs.getBoolean("student.approved"),rs.getString("user.password"));
+            	studentList.add(student);
+            	System.out.println(student.getName());
+            }
+            
+            return studentList;
+            
+        } catch (SQLException e) {
+    		return null;
+        }
+	}
+
+	@Override
+	public Set<Prof> viewProfessors() {
+		// TODO Auto-generated method stub
+		try {
+			Set<Prof> profList = new HashSet<Prof>();
+            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_PROF_LIST);
+            //ps.setString(1, courseID);
+            ResultSet rs = ps.executeQuery(); 
+            
+            while(rs.next())
+            {
+            	Prof prof=new Prof(rs.getString("user.userID"),rs.getString("user.name"),rs.getString("user.contact"),rs.getString("user.email"),rs.getString("professor.department"),rs.getString("professor.qualification"),rs.getString("user.password"));
+            	profList.add(prof);
+            }
+            
+            return profList;
+            
+        } catch (SQLException e) {
+    		return null;
         }
 	}
 

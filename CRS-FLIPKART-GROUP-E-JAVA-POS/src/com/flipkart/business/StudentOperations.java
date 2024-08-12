@@ -23,11 +23,9 @@ public class StudentOperations implements StudentInterface {
 		for(String courseID:courses) {
 			if(count==4)break;
 			float temp=sdi.register(student, courseID);
-			if(temp>0) {
-				price+=temp;
-				count++;
-				confirmedRegistration=confirmedRegistration.concat(courseID+"\n");
-			}
+			count++;
+			confirmedRegistration=confirmedRegistration.concat(courseID+"\n");
+			price+=temp;
 		}
 		return confirmedRegistration.concat("price: " + String.valueOf(price));
 	}
@@ -65,21 +63,36 @@ public class StudentOperations implements StudentInterface {
      * Method to get billing information
      * @return billing information
      */
-	public String getBillingInfo(Student student) {
-        Billing billing = sdi.getBillingInfo(student);
-        String status = "Pending";
-        if (billing.isStatus()) status = "Completed";
-        return billing.getBillingID() + ":" + billing.getBillamt() + ":" + status;
+    public String getBillingInfo(Student student) {
+        //return student.getBilling().infoAboutPay();
+    	Billing billing=sdi.getBillingInfo(student);
+    	String status="Pending";
+    	if(billing.isStatus())status="Completed";
+    	return billing.getBillingID()+":"+billing.getBillamt()+":"+status;
     }
 
-	/**
-	 * Method to make a payment for the student
-	 * @param student: Student object
-	 * @param amount: amount to be paid
-	 * @param paymentType: type of payment (e.g., CreditCard, NetBanking)
-	 * @return confirmation message
-	 */
-	public String makePayment(Student student, float amount, String paymentType) {
+	@Override
+	public int getValidCount(List<String> courses) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String viewCourses() {
+		// TODO Auto-generated method stub
+		String catalog="";
+		Set<Course> courses=sdi.viewCourses();
+		for (Course course : courses) {
+	        String prof = course.getCourseProf();
+	        //System.out.println(course.getCourseID() + " " + course.getCourseName());
+	        if (prof == null) prof = "Prof Awaited";
+	        catalog = catalog.concat(course.getCourseID() + " " + course.getCourseName() + " " + prof + " " + String.valueOf(course.getSeats()) + "\n");
+	    }//System.out.println(catalog);
+		return catalog;
+	}
+	
+	@Override
+	public String makePayment(Student student, float amount, String transactionID) {
 	    // Retrieve billing information using the Student object
 	    Billing billing = sdi.getBillingInfo(student);
 	    
@@ -92,10 +105,8 @@ public class StudentOperations implements StudentInterface {
 	    }
 
 	    // Generate a unique transaction ID
-	    String transactionID = "TXN" + System.currentTimeMillis();
 	    billing.setTransactionID(transactionID);
 	    billing.setBillamt(amount);
-	    billing.setStatus(true);
 
 	    // Update billing information in the database
 	    boolean paymentSuccess = sdi.updateBillingInfo(billing);
@@ -107,23 +118,14 @@ public class StudentOperations implements StudentInterface {
 	    }
 	}
 
-
 	@Override
-	public int getValidCount(List<String> courses) {
-		
-		return 0;
-	}
-
-	@Override
-	public String viewCourses() {
-		String catalog="";
-		Set<Course> courses=sdi.viewCourses();
-		for (Course course : courses) {
-	        String prof = course.getCourseProf();
-	        //System.out.println(course.getCourseID() + " " + course.getCourseName());
-	        if (prof == null) prof = "Prof Awaited";
-	        catalog = catalog.concat(course.getCourseID() + " " + course.getCourseName() + " " + prof + " " + String.valueOf(course.getSeats()) + "\n");
-	    }//System.out.println(catalog);
-		return catalog;
+	public float getCoursePricing(Student student) {
+		// TODO Auto-generated method stub
+		float price=0;
+    	List<Course> courseList=sdi.viewCoursesEnrolled(student);
+    	for(Course course:courseList) {
+    		price+=course.getPrice();
+    	}
+    	return price;
 	}
 }

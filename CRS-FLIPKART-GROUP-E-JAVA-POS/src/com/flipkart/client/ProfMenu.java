@@ -54,19 +54,23 @@ public class ProfMenu {
 
 	private void viewRegisteredStudent(Prof prof) {
 		// TODO Auto-generated method stub
-		System.out.println("Course ID:");
+		System.out.println("Select Course ID from following:");
+		System.out.println(profService.viewCourseOffering(prof));
 		Scanner s= new Scanner(System.in);
 		String courseID=s.next();
 		String studentList=profService.getStudents(courseID,prof);
 		System.out.println(studentList);
 	}
+	
 
 	private void submitGrade(Prof prof) {
 		// TODO Auto-generated method stub
-		System.out.println("Course ID:");
+		System.out.println("Select Course ID from following:");
+		System.out.println(profService.viewCourseOffering(prof));
 		Scanner s= new Scanner(System.in);
 		String courseID=s.next();
-		System.out.println("Student ID:");
+		System.out.println("Enter Student ID from following:");
+		System.out.println(profService.getStudents(courseID,prof));
 		String studentID=s.next();
 		System.out.println("Grade:");
 		String grade=s.next();

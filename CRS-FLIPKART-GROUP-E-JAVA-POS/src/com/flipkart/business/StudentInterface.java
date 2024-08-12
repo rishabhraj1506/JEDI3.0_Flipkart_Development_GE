@@ -18,4 +18,8 @@ public interface StudentInterface {
 	public String getBillingInfo(Student student);
 	
 	public String viewCourses();
+	
+	public String makePayment(Student student, float amount, String transcationID);
+	
+	public float getCoursePricing(Student student);
 }

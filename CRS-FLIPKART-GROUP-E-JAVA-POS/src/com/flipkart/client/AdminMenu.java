@@ -53,8 +53,7 @@ public class AdminMenu {
 	private void approveRegistration(Admin admin) {
 		// TODO Auto-generated method stub
 		Scanner s=new Scanner(System.in);
-		UserOperations userInstance=ClientApplication.getUsers();
-		userInstance.printUsers();
+		System.out.println(adminService.viewUnapprovedStudents());
 		System.out.println("Student ID for approval:");
 		String studentID=s.next();
 		//Student student=(Student) userInstance.findByID(studentID);
@@ -63,6 +62,8 @@ public class AdminMenu {
 
 	private void removeCourse(Admin admin) {
 		// TODO Auto-generated method stub
+		System.out.println("Existing Courses:");
+		System.out.println(adminService.viewCourses());
 		System.out.println("Course Code to be removed:");
 		Scanner s=new Scanner(System.in);
 		String courseID=s.next();
@@ -72,6 +73,8 @@ public class AdminMenu {
 
 	private void addCourse(Admin admin) {
 		// TODO Auto-generated method stub
+		System.out.println("Existing Courses:");
+		System.out.println(adminService.viewCourses());
 		System.out.println("Enter Course details in following format:\n<courseID> <courseName> <seats> <price>");
 		Scanner s=new Scanner(System.in);
 		String courseID=s.next(), courseName=s.next();
@@ -83,7 +86,8 @@ public class AdminMenu {
 
 	private void updateCourse(Admin admin) {
 		// TODO Auto-generated method stub
-		Catalog catalog=ClientApplication.getCatalog();
+		System.out.println("Existing Courses:");
+		System.out.println(adminService.viewCourses());
 		Scanner s=new Scanner(System.in);
 		System.out.println("Enter old courseID");
 		String oldCourseID=s.next();
@@ -100,6 +104,7 @@ public class AdminMenu {
 
 	private void removeProf(Admin admin) {
 		// TODO Auto-generated method stub
+		System.out.println(adminService.viewProfessors());
 		System.out.println("User ID for professor removal:");
 		Scanner s=new Scanner(System.in);
 		String profID=s.next();

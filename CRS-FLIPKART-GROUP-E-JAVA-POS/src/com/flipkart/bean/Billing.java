@@ -1,7 +1,10 @@
 package com.flipkart.bean;
 
 /**
+ * 
+ * @author JEDI-03
  * Class to store billing information
+ * 
  */
 public class Billing {
 
@@ -23,23 +26,7 @@ public class Billing {
         this.studentID = studentID;
         this.billamt = billamt;
         this.status = status;
-        this.transactionID = null;
-    }
-
-    /**
-     * Parameterized constructor with transaction ID
-     * @param billingID: unique billing identifier
-     * @param studentID: ID of the student
-     * @param billamt: amount to be billed
-     * @param status: payment status
-     * @param transactionID: transaction ID
-     */
-    public Billing(String billingID, String studentID, float billamt, boolean status, String transactionID) {
-        this.billingID = billingID;
-        this.studentID = studentID;
-        this.billamt = billamt;
-        this.status = status;
-        this.transactionID = transactionID;
+        this.setTransactionID(null);
     }
 
     // Getters and Setters
@@ -75,11 +62,11 @@ public class Billing {
         this.status = status;
     }
 
-    public String getTransactionID() {
-        return transactionID;
-    }
+	public String getTransactionID() {
+		return transactionID;
+	}
 
-    public void setTransactionID(String transactionID) {
-        this.transactionID = transactionID;
-    }
+	public void setTransactionID(String transactionID) {
+		this.transactionID = transactionID;
+	}
 }

@@ -1,7 +1,10 @@
 package com.flipkart.dao;
 
+import java.util.Set;
+
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Prof;
+import com.flipkart.bean.Student;
 
 public interface AdminDaoInterface {
 	public String addProf(Prof prof, String username);
@@ -15,4 +18,10 @@ public interface AdminDaoInterface {
 	public boolean removeCourse(String courseID);
 	
 	public boolean registerStudent(String studentID);
+	
+	public Set<Course> viewCourses();
+	
+	public Set<Prof> viewProfessors();
+	
+	public Set<Student> viewUnapprovedStudents();
 }

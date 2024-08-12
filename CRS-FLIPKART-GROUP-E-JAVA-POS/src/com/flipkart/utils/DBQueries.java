@@ -64,7 +64,12 @@ public class DBQueries {
 	public static final String GET_PROFESSOR_COURSEID="SELECT courseProf FROM catalog WHERE courseID=?";
 
 	public static final String CHECK_STUDENT_COURSE="SELECT studentID FROM registeredCourse WHERE courseID=? AND studentID=? ";
+
+	public static final String VIEW_COURSE_ENROLLED="SELECT * FROM catalog WHERE courseProf = ?";
 	
 	public static final String UPDATE_BILLING_INFO = "UPDATE billing SET billamt = ?, status = ?, transactionID = ? WHERE billingID = ?";
-
+	
+	public static final String VIEW_UNAPPROVED_STUDENTS ="SELECT * FROM student WHERE approved=0";
+	
+	public static final String VIEW_PROF_LIST = "SELECT * FROM professor JOIN user ON professor.userID=user.userID";
 }

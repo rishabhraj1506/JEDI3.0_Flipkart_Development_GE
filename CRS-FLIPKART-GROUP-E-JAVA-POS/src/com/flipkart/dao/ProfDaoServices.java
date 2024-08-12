@@ -111,8 +111,30 @@ public class ProfDaoServices implements ProfDaoInterface{
             
             while(rs.next())
             {
-            	Course student=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
-            	courseList.add(student);
+            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
+            	courseList.add(course);
+            }
+            
+            return courseList;
+            
+        } catch (SQLException e) {
+    		return null;
+        }
+	}
+
+	@Override
+	public Set<Course> viewCourseOffering(Prof prof) {
+		// TODO Auto-generated method stub
+		try {
+			Set<Course> courseList = new HashSet<Course>();
+            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_ENROLLED);
+            ps.setString(1, prof.getID());
+            ResultSet rs = ps.executeQuery(); 
+            
+            while(rs.next())
+            {
+            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
+            	courseList.add(course);
             }
             
             return courseList;

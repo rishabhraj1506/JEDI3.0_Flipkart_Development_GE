@@ -12,11 +12,9 @@ class StudentMenu {
 
 	void studentMenu(Student student) {
 		// TODO Auto-generated method stub
-		
 		Scanner s=new Scanner(System.in);
 		int in =0;
 		while(in!=5) {
-			StudentOperations studentOperations = new StudentOperations();
 			System.out.println("Student Menu:");
 			System.out.println("1. Register Courses\n2. View Courses\n3. View Report Card\n4. Billing info\n5. Exit");
 			
@@ -35,15 +33,9 @@ class StudentMenu {
 					billingInfo(student);
 					break;
 				case 5:
-	                System.out.println("Enter payment amount:");
-	                float amount = s.nextFloat();
-	                System.out.println("Enter payment type (e.g., CreditCard, NetBanking):");
-	                String paymentType = s.next();
-	                String paymentStatus = studentOperations.makePayment(student, amount, paymentType);
-	                System.out.println(paymentStatus);
-	                break;
-	            case 6:
-	                continue;
+					makePayment(student);
+				case 6:
+					continue;
 				default:
 					System.out.println("Invalid");
 			}
@@ -79,15 +71,24 @@ class StudentMenu {
 			courses.add(courseID);
 		}
 		String registered=studentService.register(student, courses);
-		/*String[] splitArray = registered.split("\n");
+		String[] splitArray = registered.split("\n");
 		String floatval=splitArray[splitArray.length-1].split(" ")[1];
 		float price=Float.parseFloat(floatval);
-		*/
+		
 		System.out.println("Following courses were registered successfully");
 		System.out.println(registered);
 		
 		//if(studentService.register(student, courses))System.out.println("registration success");
 		//else System.out.println("registration failed");
 	}
-
+	
+	private void makePayment(Student student)
+	{
+		float price=studentService.getCoursePricing(student);
+		System.out.println("Enter transactionID:");
+		Scanner s= new Scanner(System.in);
+        String transactionID = s.next();
+        String paymentStatus = studentService.makePayment(student, price, transactionID);
+        System.out.println(paymentStatus);
+	}
 }

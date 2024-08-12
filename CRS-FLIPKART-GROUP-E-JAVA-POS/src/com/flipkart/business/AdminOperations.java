@@ -2,6 +2,7 @@ package com.flipkart.business;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.flipkart.bean.*;
 import com.flipkart.dao.AdminDaoServices;
@@ -76,4 +77,39 @@ public class AdminOperations implements AdminInterface{
     	return "Operation Failed...";
     	//student.setApproved(true);
     }
+
+	@Override
+	public String viewCourses() {
+		// TODO Auto-generated method stub
+		String catalog="";
+		Set<Course> courses=adi.viewCourses();
+		for (Course course : courses) {
+	        String prof = course.getCourseProf();
+	        //System.out.println(course.getCourseID() + " " + course.getCourseName());
+	        if (prof == null) prof = "Prof Awaited";
+	        catalog = catalog.concat(course.getCourseID() + " " + course.getCourseName() + " " + prof + " " + String.valueOf(course.getSeats()) + "\n");
+	    }//System.out.println(catalog);
+		return catalog;
+	}
+	
+	@Override
+	public String viewProfessors() {
+		// TODO Auto-generated method stub
+		String catalog="";
+		Set<Prof> profs=adi.viewProfessors();
+		for (Prof prof : profs) {
+	        catalog = catalog.concat(prof.getName() + " " + prof.getID() + " " + prof.getDept() + "\n");
+	    }//System.out.println(catalog);
+		return catalog;
+	}
+
+	@Override
+	public String viewUnapprovedStudents() {
+		// TODO Auto-generated method stub
+		Set<Student> studentList=adi.viewUnapprovedStudents();
+    	String students="";
+    	for(Student student:studentList) {
+    		students=students.concat(student.getID()+":"+student.getName()+":"+student.getRollNum());
+    	}return students;
+	}
 }
