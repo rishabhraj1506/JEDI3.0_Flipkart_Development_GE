@@ -14,6 +14,10 @@ import com.flipkart.bean.Billing;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.ReportCard;
 import com.flipkart.bean.Student;
+import com.flipkart.exception.BillingNotFoundException;
+import com.flipkart.exception.CourseAlreadyOptedException;
+import com.flipkart.exception.CourseNotAvailableException;
+import com.flipkart.exception.CourseNotFoundException;
 import com.flipkart.utils.DBQueries;
 import com.flipkart.utils.DBUtil;
 
@@ -21,17 +25,25 @@ public class StudentDaoServices implements StudentDaoInterface{
 	public static Connection conn = DBUtil.getConnection();
 
 	@Override
-	public float register(Student student, String courseID) {
+	public float register(Student student, String courseID) throws CourseAlreadyOptedException, CourseNotAvailableException, CourseNotFoundException{
 		// TODO Auto-generated method stub
 		try {
+			PreparedStatement psCheck = conn.prepareStatement(DBQueries.CHECK_STUDENT_COURSE);
+			psCheck.setString(1, courseID);
+			psCheck.setString(2, student.getID());
+			ResultSet rs = psCheck.executeQuery();
+			if(rs.next())throw new CourseAlreadyOptedException(student.getID(),courseID);
+			
+			
 			PreparedStatement ps = conn.prepareStatement(DBQueries.GET_COURSE);
 			ps.setString(1, courseID);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			int seats=rs.getInt("seats");
-			//System.out.println(seats);
+			rs = ps.executeQuery();
+			int seats=0;
+			if(rs.next()) {
+				seats=rs.getInt("seats");
+			}else throw new CourseNotFoundException(courseID);
 			
-			if(seats==0) return 0;
+			if(seats==0) throw new CourseNotAvailableException(courseID);
 			
 			PreparedStatement ps1 = conn.prepareStatement(DBQueries.DECR_SEATS);
 			ps1.setInt(1, seats-1);
@@ -103,17 +115,17 @@ public class StudentDaoServices implements StudentDaoInterface{
 	}
 
 	@Override
-	public Billing getBillingInfo(Student student) {
+	public Billing getBillingInfo(Student student) throws BillingNotFoundException{
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement ps = conn.prepareStatement(DBQueries.GET_BILLING_INFO);
             ps.setString(1, student.getID());
             ResultSet rs = ps.executeQuery(); 
-            rs.next();
-            Billing billingInfo=new Billing(rs.getString("billingID"),student.getID(),rs.getFloat("billAmount"),rs.getBoolean("status"));
+            if(rs.next()) {
+            	Billing billingInfo=new Billing(rs.getString("billingID"),student.getID(),rs.getFloat("billAmount"),rs.getBoolean("status"));
             
-            return billingInfo;
-            
+            	return billingInfo;
+            }else throw new BillingNotFoundException(student.getID());
         } catch (SQLException e) {
     		return null;
         }

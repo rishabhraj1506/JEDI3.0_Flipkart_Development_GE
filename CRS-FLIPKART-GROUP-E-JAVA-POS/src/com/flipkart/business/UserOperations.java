@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.flipkart.bean.*;
 import com.flipkart.dao.UserDaoServices;
+import com.flipkart.exception.UserNotFoundException;
+import com.flipkart.exception.UsernameAlreadyInUseException;
 import com.flipkart.dao.UserDaoInterface;
 
 public class UserOperations implements UserInterface{
@@ -12,9 +14,14 @@ public class UserOperations implements UserInterface{
 	UserDaoInterface udi=new UserDaoServices()
 ;	
 	public User retrieve(String username, String password) {
-		User user=udi.getUser(username);
-		if(password.equals(user.getPassword())) {
-			return user;
+		User user;
+		try {
+			user = udi.getUser(username);
+			if(password.equals(user.getPassword())) 
+				return user;
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}return null;
 	}
 	
@@ -23,12 +30,24 @@ public class UserOperations implements UserInterface{
 	}
 	
 	public boolean changePassword(String username, String password, String newPassword){
-		return udi.updatePassword(username, password, newPassword);
+		try {
+			return udi.updatePassword(username, password, newPassword);
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public String registerStudent(String username, String name, String contact, 
 			String email, String password, String branch) {
-		return udi.registerStudent(username, name, contact, email, password, branch);
+		try {
+			return udi.registerStudent(username, name, contact, email, password, branch);
+		} catch (UsernameAlreadyInUseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public User findByID(String id) {

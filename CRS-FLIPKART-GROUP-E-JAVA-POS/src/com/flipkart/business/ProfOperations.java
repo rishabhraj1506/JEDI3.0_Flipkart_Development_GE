@@ -3,6 +3,10 @@ package com.flipkart.business;
 import com.flipkart.bean.*;
 import com.flipkart.dao.ProfDaoInterface;
 import com.flipkart.dao.ProfDaoServices;
+import com.flipkart.exception.CourseNotAvailableException;
+import com.flipkart.exception.CourseNotOfferedException;
+import com.flipkart.exception.CourseNotOptedException;
+import com.flipkart.exception.GradeAlreadyAddedException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,7 +23,12 @@ public class ProfOperations implements ProfInterface{
      * @param course: the course to be offered
      */
     public String offerCourse(String courseID, Prof prof) {
-        if(pdi.offerCourse(courseID, prof))return "Course enrolled successfully";
+        try {
+			if(pdi.offerCourse(courseID, prof))return "Course enrolled successfully";
+		} catch (CourseNotAvailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return "Enrollment failed...";
         //
     }
@@ -55,7 +64,15 @@ public class ProfOperations implements ProfInterface{
     			return true;
     		}
     	}*/
-    	if(pdi.giveGrade(courseID, studentID, grade, prof))return "Grade submitted successfully";
+    	try {
+			if(pdi.giveGrade(courseID, studentID, grade, prof))return "Grade submitted successfully";
+		} catch (CourseNotOptedException | GradeAlreadyAddedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CourseNotOfferedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return "Grade submission failed...";
     }
     

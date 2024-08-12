@@ -14,13 +14,16 @@ import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
 import com.flipkart.utils.DBUtil;
 import com.flipkart.utils.DBQueries;
+import com.flipkart.exception.StudentNotApprovedException;
+import com.flipkart.exception.UserNotFoundException;
+import com.flipkart.exception.UsernameAlreadyInUseException;
 
 public class UserDaoServices implements UserDaoInterface{
 	
 	public static Connection conn = DBUtil.getConnection();
 	
 	@Override
-	public User getUser(String username) {
+	public User getUser(String username) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		try{
 			PreparedStatement ps = conn.prepareStatement(DBQueries.GET_USER_USERNAME);
@@ -35,7 +38,12 @@ public class UserDaoServices implements UserDaoInterface{
 				//user=new User(userID,name,role,contact,email,password);
 				
 				if(role.equals("Student")) {
-					user=getStudent(userID,name,role,contact,email,password);
+					try {
+						user=getStudent(userID,name,role,contact,email,password);
+					} catch (StudentNotApprovedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				else if(role.equals("Professor")) {
 					user=getProfessor(userID,name,role,contact,email,password);
@@ -46,7 +54,7 @@ public class UserDaoServices implements UserDaoInterface{
 				return user;
 			}
 			else {
-				return null;
+				throw new UserNotFoundException(username);
 			}
 		}catch(SQLException e) {
 			return null;
@@ -54,7 +62,7 @@ public class UserDaoServices implements UserDaoInterface{
 	}
 	
 	User getStudent(String userID, String name, String role,
-			String contact, String email, String password) {
+			String contact, String email, String password) throws StudentNotApprovedException{
 		try{
 			PreparedStatement ps = conn.prepareStatement(DBQueries.GET_STUDENT_USERID);
 			
@@ -67,6 +75,9 @@ public class UserDaoServices implements UserDaoInterface{
 				int rollNum=rs.getInt("rollNum");
 				boolean approved=rs.getBoolean("approved");
 				user=(User)new Student(userID,name,contact,email,branch,rollNum,approved,password);
+				if (!approved) {
+					throw new StudentNotApprovedException(userID);
+				}
 				return user;
 			}else return null;
 		}catch(SQLException e) {
@@ -102,7 +113,7 @@ public class UserDaoServices implements UserDaoInterface{
 	}
 
 	@Override
-	public String registerStudent(String username, String name, String contact, String email, String password, String branch) {
+	public String registerStudent(String username, String name, String contact, String email, String password, String branch) throws UsernameAlreadyInUseException {
 		// TODO Auto-generated method stub
 		try {
 
@@ -113,7 +124,7 @@ public class UserDaoServices implements UserDaoInterface{
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				return "registration unsuccesful username already exists";
+				throw new UsernameAlreadyInUseException(username);
 			}
 
 		}catch (SQLException e) {
@@ -194,15 +205,23 @@ public class UserDaoServices implements UserDaoInterface{
 	}
 
 	@Override
-	public boolean updatePassword(String username, String oldPassword, String newPassword) {
+	public boolean updatePassword(String username, String oldPassword, String newPassword) throws UserNotFoundException {
 		// TODO Auto-generated method stub
 		try {
+			PreparedStatement ps1 = conn.prepareStatement(DBQueries.GET_USER_USERNAME);
+			ps1.setString(1, username);
+			ResultSet rs = ps1.executeQuery();
+	
+			User user = null;
+			if (rs.next())
+			{
 			PreparedStatement ps = conn.prepareStatement(DBQueries.UPDATE_PASSWORD);
 			ps.setString(2, username);
 			ps.setString(3, oldPassword);
 			ps.setString(1, newPassword);
 			ps.executeUpdate();
 			return true;
+			}else throw new UserNotFoundException(username);
 		} catch (SQLException e) {
 			return false;
 		}

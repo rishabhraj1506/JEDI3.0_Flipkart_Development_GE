@@ -16,7 +16,7 @@ class StudentMenu {
 		int in =0;
 		while(in!=5) {
 			System.out.println("Student Menu:");
-			System.out.println("1. Register Courses\n2. View Courses\n3. View Report Card\n4. Billing info\n5. Exit");
+			System.out.println("1. Register Courses\n2. View Courses\n3. View Report Card\n4. Billing info\n5. Make Payment\n6. Exit");
 			
 			in=s.nextInt();
 			switch(in) {

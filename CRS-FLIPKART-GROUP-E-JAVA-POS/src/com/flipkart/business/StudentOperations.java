@@ -3,6 +3,11 @@ package com.flipkart.business;
 import com.flipkart.bean.*;
 import com.flipkart.dao.StudentDaoInterface;
 import com.flipkart.dao.StudentDaoServices;
+import com.flipkart.exception.BillingNotFoundException;
+import com.flipkart.exception.CourseAlreadyOptedException;
+import com.flipkart.exception.CourseNotAvailableException;
+import com.flipkart.exception.CourseNotFoundException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +27,23 @@ public class StudentOperations implements StudentInterface {
 		float price=0;
 		for(String courseID:courses) {
 			if(count==4)break;
-			float temp=sdi.register(student, courseID);
+			float temp=0;
+			try {
+				temp = sdi.register(student, courseID);
+			} catch (CourseAlreadyOptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CourseNotAvailableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CourseNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			count++;
 			confirmedRegistration=confirmedRegistration.concat(courseID+"\n");
 			price+=temp;
+			
 		}
 		return confirmedRegistration.concat("price: " + String.valueOf(price));
 	}
@@ -65,10 +83,17 @@ public class StudentOperations implements StudentInterface {
      */
     public String getBillingInfo(Student student) {
         //return student.getBilling().infoAboutPay();
-    	Billing billing=sdi.getBillingInfo(student);
-    	String status="Pending";
-    	if(billing.isStatus())status="Completed";
-    	return billing.getBillingID()+":"+billing.getBillamt()+":"+status;
+    	Billing billing;
+		try {
+			billing = sdi.getBillingInfo(student);
+	    	String status="Pending";
+	    	if(billing.isStatus())status="Completed";
+	    	return billing.getBillingID()+":"+billing.getBillamt()+":"+status;
+		} catch (BillingNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
     }
 
 	@Override
@@ -94,28 +119,32 @@ public class StudentOperations implements StudentInterface {
 	@Override
 	public String makePayment(Student student, float amount, String transactionID) {
 	    // Retrieve billing information using the Student object
-	    Billing billing = sdi.getBillingInfo(student);
+	    Billing billing;
+		try {
+			billing = sdi.getBillingInfo(student);
+			if (billing.isStatus()) {
+		        return "Payment already completed for billing ID: " + billing.getBillingID();
+		    }
+
+		    // Generate a unique transaction ID
+		    billing.setTransactionID(transactionID);
+		    billing.setBillamt(amount);
+
+		    // Update billing information in the database
+		    boolean paymentSuccess = sdi.updateBillingInfo(billing);
+		    
+		    if (paymentSuccess) {
+		        return "Payment Successful. Transaction ID: " + transactionID;
+		    } else {
+		        return "Payment failed. Please try again.";
+		    }
+		} catch (BillingNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	    
-	    if (billing == null) {
-	        return "Billing information not found for student ID: " + student.getID();
-	    }
-
-	    if (billing.isStatus()) {
-	        return "Payment already completed for billing ID: " + billing.getBillingID();
-	    }
-
-	    // Generate a unique transaction ID
-	    billing.setTransactionID(transactionID);
-	    billing.setBillamt(amount);
-
-	    // Update billing information in the database
-	    boolean paymentSuccess = sdi.updateBillingInfo(billing);
-	    
-	    if (paymentSuccess) {
-	        return "Payment Successful. Transaction ID: " + transactionID;
-	    } else {
-	        return "Payment failed. Please try again.";
-	    }
 	}
 
 	@Override

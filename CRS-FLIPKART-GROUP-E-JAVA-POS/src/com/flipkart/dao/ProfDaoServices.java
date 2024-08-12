@@ -10,22 +10,25 @@ import java.util.Set;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Prof;
 import com.flipkart.bean.Student;
+import com.flipkart.exception.CourseNotAvailableException;
+import com.flipkart.exception.CourseNotOfferedException;
+import com.flipkart.exception.CourseNotOptedException;
+import com.flipkart.exception.GradeAlreadyAddedException;
 import com.flipkart.utils.DBQueries;
 import com.flipkart.utils.DBUtil;
 
 public class ProfDaoServices implements ProfDaoInterface{
 	public static Connection conn = DBUtil.getConnection();
 	@Override
-	public boolean offerCourse(String courseID, Prof prof) {
+	public boolean offerCourse(String courseID, Prof prof) throws CourseNotAvailableException {
 		// TODO Auto-generated method stub
 		try {
         	PreparedStatement psCheck = conn.prepareStatement(DBQueries.VIEW_VACANT_COURSE);
         	psCheck.setString(1, courseID);
         	ResultSet rs = psCheck.executeQuery();
         	rs.next();
-        	if(rs.getString("courseProf") != null) {
-        		if(rs.getString("courseProf").equals(prof.getID()))
-        			return false;    			
+        	if(rs.getString("courseProf") != null&&rs.getString("courseProf").equals(prof.getID())) {
+        		throw new CourseNotAvailableException(courseID);  			
         	}
         	
         	
@@ -68,7 +71,7 @@ public class ProfDaoServices implements ProfDaoInterface{
 	}
 
 	@Override
-	public boolean giveGrade(String courseID, String studentID, String grade, Prof prof) {
+	public boolean giveGrade(String courseID, String studentID, String grade, Prof prof) throws CourseNotOptedException,GradeAlreadyAddedException,CourseNotOfferedException{
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement psCheck = conn.prepareStatement(DBQueries.GET_PROFESSOR_COURSEID);
@@ -76,14 +79,14 @@ public class ProfDaoServices implements ProfDaoInterface{
             ResultSet rsCheck = psCheck.executeQuery();
             rsCheck.next();
             if(!rsCheck.getString("courseProf").equals(prof.getID())) {
-            	return false;
+            	throw new CourseNotOfferedException(prof.getID(), courseID);
             }PreparedStatement psCheck2 = conn.prepareStatement(DBQueries.CHECK_STUDENT_COURSE);
             psCheck2.setString(1, courseID);
             psCheck2.setString(2, studentID);
             ResultSet rsCheck2 = psCheck2.executeQuery();
             
             if(!rsCheck2.next()) {
-            	return false;
+            	throw new CourseNotOptedException(studentID, courseID);
             }
 			
             PreparedStatement ps = conn.prepareStatement(DBQueries.SET_GRADE);
@@ -93,11 +96,10 @@ public class ProfDaoServices implements ProfDaoInterface{
             int rs = ps.executeUpdate();
             if (rs == 1)
             	return true;
-            
+            else throw new GradeAlreadyAddedException(studentID, courseID);
         } catch (SQLException e) {
         	return false;
         }
-		return false;
 	}
 
 	@Override

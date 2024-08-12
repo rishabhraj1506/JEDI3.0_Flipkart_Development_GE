@@ -72,4 +72,5 @@ public class DBQueries {
 	public static final String VIEW_UNAPPROVED_STUDENTS ="SELECT * FROM student WHERE approved=0";
 	
 	public static final String VIEW_PROF_LIST = "SELECT * FROM professor JOIN user ON professor.userID=user.userID";
+	
 }
