@@ -160,11 +160,11 @@ public class StudentOperations implements StudentInterface {
 	@Override
 	public float getCoursePricing(Student student) {
 		// TODO Auto-generated method stub
-		float price=0;
-    	List<Course> courseList=sdi.viewCoursesEnrolled(student);
-    	for(Course course:courseList) {
-    		price+=course.getPrice();
-    	}
-    	return price;
+		List<Course> courseList = sdi.viewCoursesEnrolled(student);
+
+		return courseList.stream()
+		                 .map(Course::getPrice)
+		                 .reduce(0.0f, Float::sum);
+
 	}
 }

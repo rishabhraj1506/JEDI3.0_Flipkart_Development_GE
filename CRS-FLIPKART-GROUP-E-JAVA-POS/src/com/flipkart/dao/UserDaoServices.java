@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 
 import com.flipkart.bean.Admin;
 import com.flipkart.bean.Prof;
@@ -140,14 +142,10 @@ public class UserDaoServices implements UserDaoInterface{
 				userIds.add(rs.getString("userID"));
 			}
 			Random rand = new Random();
-			String userID;
-			while(true)
-			{
-				long id = 10000000 + rand.nextInt(10000000);
-				userID =  "STUDENT" + Long.toString(id);
-				if(!userIds.contains(userID))
-					break;
-			}
+			String userID = Stream.generate(() -> "STUDENT" + (10000000 + rand.nextInt(10000000)))
+				    .filter(id -> !userIds.contains(id))
+				    .findFirst()
+				    .orElseThrow(() -> new RuntimeException("Unable to generate unique userID"));
 			ps = conn.prepareStatement(DBQueries.FETCH_ROLLNUMS);
 			rs=ps.executeQuery();
 			List<Integer> rollNums=new ArrayList<Integer>();
@@ -155,13 +153,11 @@ public class UserDaoServices implements UserDaoInterface{
 			{
 				rollNums.add(rs.getInt("rollNum"));
 			}
-			int rollNum=0;
-			while(true)
-			{
-				rollNum++;
-				if(!rollNums.contains(rollNum))
-					break;
-			}
+			int rollNum = Stream.iterate(1, n -> n + 1)
+				    .filter(num -> !rollNums.contains(num))
+				    .findFirst()
+				    .orElseThrow(() -> new RuntimeException("Unable to generate unique rollNum"));
+			
 			ps = conn.prepareStatement(DBQueries.ADD_USER);
 			ps.setString(1, userID);
 			ps.setString(2, name);

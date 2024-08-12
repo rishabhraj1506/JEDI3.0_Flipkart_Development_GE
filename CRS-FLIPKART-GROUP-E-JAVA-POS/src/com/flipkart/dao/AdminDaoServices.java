@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Prof;
@@ -175,18 +177,16 @@ public class AdminDaoServices implements AdminDaoInterface{
 	@Override
 	public Set<Course> viewCourses() {
 		try {
-			Set<Course> courseList = new HashSet<Course>();
-            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
-            //ps.setString(1, courseID);
-            ResultSet rs = ps.executeQuery(); 
-            
-            while(rs.next())
-            {
-            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
-            	courseList.add(course);
-            }
-            
-            return courseList;
+			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
+			ResultSet rs = ps.executeQuery();
+
+			Set<Course> courseList = new HashSet<>();
+			while (rs.next()) {
+			    courseList.add(new Course(rs.getString("courseID"), rs.getString("courseName"), rs.getString("courseProf"), rs.getInt("seats")));
+			}
+
+			return courseList.stream().collect(Collectors.toSet());
+
             
         } catch (SQLException e) {
     		return null;
@@ -197,18 +197,16 @@ public class AdminDaoServices implements AdminDaoInterface{
 	public Set<Student> viewUnapprovedStudents() {
 		// TODO Auto-generated method stub
 		try {
-			Set<Student> studentList = new HashSet<Student>();
-            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_UNAPPROVED_STUDENTS);
-            ResultSet rs = ps.executeQuery(); 
-            
-            while(rs.next())
-            {
-            	Student student=new Student(rs.getString("user.userID"),rs.getString("user.name"),rs.getString("user.contact"),rs.getString("user.email"),rs.getString("student.branch"),rs.getInt("student.rollNum"),rs.getBoolean("student.approved"),rs.getString("user.password"));
-            	studentList.add(student);
-            	System.out.println(student.getName());
-            }
-            
-            return studentList;
+			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_UNAPPROVED_STUDENTS);
+			ResultSet rs = ps.executeQuery();
+
+			Set<Student> studentList = new HashSet<>();
+			while (rs.next()) {
+			    studentList.add(new Student(rs.getString("user.userID"), rs.getString("user.name"), rs.getString("user.contact"), rs.getString("user.email"), rs.getString("student.branch"), rs.getInt("student.rollNum"), rs.getBoolean("student.approved"), rs.getString("user.password")));
+			}
+
+			return studentList.stream().collect(Collectors.toSet());
+
             
         } catch (SQLException e) {
     		return null;
@@ -219,18 +217,16 @@ public class AdminDaoServices implements AdminDaoInterface{
 	public Set<Prof> viewProfessors() {
 		// TODO Auto-generated method stub
 		try {
-			Set<Prof> profList = new HashSet<Prof>();
-            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_PROF_LIST);
-            //ps.setString(1, courseID);
-            ResultSet rs = ps.executeQuery(); 
-            
-            while(rs.next())
-            {
-            	Prof prof=new Prof(rs.getString("user.userID"),rs.getString("user.name"),rs.getString("user.contact"),rs.getString("user.email"),rs.getString("professor.department"),rs.getString("professor.qualification"),rs.getString("user.password"));
-            	profList.add(prof);
-            }
-            
-            return profList;
+			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_PROF_LIST);
+			ResultSet rs = ps.executeQuery();
+
+			Set<Prof> profList = new HashSet<>();
+			while (rs.next()) {
+			    profList.add(new Prof(rs.getString("user.userID"), rs.getString("user.name"), rs.getString("user.contact"), rs.getString("user.email"), rs.getString("professor.department"), rs.getString("professor.qualification"), rs.getString("user.password")));
+			}
+
+			return profList.stream().collect(Collectors.toSet());
+
             
         } catch (SQLException e) {
     		return null;

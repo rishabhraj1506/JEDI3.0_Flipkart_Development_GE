@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Prof;
@@ -16,6 +17,7 @@ import com.flipkart.exception.CourseNotOptedException;
 import com.flipkart.exception.GradeAlreadyAddedException;
 import com.flipkart.utils.DBQueries;
 import com.flipkart.utils.DBUtil;
+
 
 public class ProfDaoServices implements ProfDaoInterface{
 	public static Connection conn = DBUtil.getConnection();
@@ -51,19 +53,17 @@ public class ProfDaoServices implements ProfDaoInterface{
 	public Set<Student> getStudents(String courseID, Prof prof) {
 		// TODO Auto-generated method stub
 		try {
-			Set<Student> studentList = new HashSet<Student>();
-            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_STUDENT_LIST);
-            ps.setString(1, courseID);
-            ResultSet rs = ps.executeQuery(); 
-            
-            while(rs.next())
-            {
-            	Student student=new Student(rs.getString("user.userID"),rs.getString("user.name"),rs.getString("user.contact"),rs.getString("user.email"),rs.getString("student.branch"),rs.getInt("student.rollNum"),rs.getBoolean("student.approved"),rs.getString("user.password"));
-            	studentList.add(student);
-            	System.out.println(student.getName());
-            }
-            
-            return studentList;
+			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_STUDENT_LIST);
+			ps.setString(1, courseID);
+			ResultSet rs = ps.executeQuery();
+
+			Set<Student> studentList = new HashSet<>();
+			while (rs.next()) {
+			    studentList.add(new Student(rs.getString("user.userID"), rs.getString("user.name"), rs.getString("user.contact"), rs.getString("user.email"), rs.getString("student.branch"), rs.getInt("student.rollNum"), rs.getBoolean("student.approved"), rs.getString("user.password")));
+			}
+
+			return studentList.stream().collect(Collectors.toSet());
+
             
         } catch (SQLException e) {
     		return null;
@@ -106,18 +106,16 @@ public class ProfDaoServices implements ProfDaoInterface{
 	public Set<Course> viewCourses() {
 		// TODO Auto-generated method stub
 		try {
-			Set<Course> courseList = new HashSet<Course>();
-            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
-            //ps.setString(1, courseID);
-            ResultSet rs = ps.executeQuery(); 
-            
-            while(rs.next())
-            {
-            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
-            	courseList.add(course);
-            }
-            
-            return courseList;
+			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
+			ResultSet rs = ps.executeQuery();
+
+			Set<Course> courseList = new HashSet<>();
+			while (rs.next()) {
+			    courseList.add(new Course(rs.getString("courseID"), rs.getString("courseName"), rs.getString("courseProf"), rs.getInt("seats")));
+			}
+
+			return courseList.stream().collect(Collectors.toSet());
+
             
         } catch (SQLException e) {
     		return null;
@@ -128,18 +126,17 @@ public class ProfDaoServices implements ProfDaoInterface{
 	public Set<Course> viewCourseOffering(Prof prof) {
 		// TODO Auto-generated method stub
 		try {
-			Set<Course> courseList = new HashSet<Course>();
-            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_ENROLLED);
-            ps.setString(1, prof.getID());
-            ResultSet rs = ps.executeQuery(); 
-            
-            while(rs.next())
-            {
-            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
-            	courseList.add(course);
-            }
-            
-            return courseList;
+			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_ENROLLED);
+			ps.setString(1, prof.getID());
+			ResultSet rs = ps.executeQuery();
+
+			Set<Course> courseList = new HashSet<>();
+			while (rs.next()) {
+			    courseList.add(new Course(rs.getString("courseID"), rs.getString("courseName"), rs.getString("courseProf"), rs.getInt("seats")));
+			}
+
+			return courseList.stream().collect(Collectors.toSet());
+
             
         } catch (SQLException e) {
     		return null;
