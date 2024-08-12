@@ -12,9 +12,11 @@ class StudentMenu {
 
 	void studentMenu(Student student) {
 		// TODO Auto-generated method stub
+		
 		Scanner s=new Scanner(System.in);
 		int in =0;
 		while(in!=5) {
+			StudentOperations studentOperations = new StudentOperations();
 			System.out.println("Student Menu:");
 			System.out.println("1. Register Courses\n2. View Courses\n3. View Report Card\n4. Billing info\n5. Exit");
 			
@@ -33,7 +35,15 @@ class StudentMenu {
 					billingInfo(student);
 					break;
 				case 5:
-					continue;
+	                System.out.println("Enter payment amount:");
+	                float amount = s.nextFloat();
+	                System.out.println("Enter payment type (e.g., CreditCard, NetBanking):");
+	                String paymentType = s.next();
+	                String paymentStatus = studentOperations.makePayment(student, amount, paymentType);
+	                System.out.println(paymentStatus);
+	                break;
+	            case 6:
+	                continue;
 				default:
 					System.out.println("Invalid");
 			}
