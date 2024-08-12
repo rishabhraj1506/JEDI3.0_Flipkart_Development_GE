@@ -55,12 +55,16 @@ public class StudentOperations implements StudentInterface {
 	
     public String viewCoursesEnrolled(Student student) {
         //return student.courseList();
-    	String courses="";
-    	List<Course> courseList=sdi.viewCoursesEnrolled(student);
-    	for(Course course:courseList) {
-    		courses=courses.concat(course.getCourseID()+":"+course.getCourseName()+":"+course.getCourseProf()+"\n");
-    	}
-    	return courses;
+    	StringBuilder courses = new StringBuilder();
+	    List<Course> courseList = sdi.viewCoursesEnrolled(student);
+	    
+	    courseList.forEach(course -> 
+	        courses.append(course.getCourseID()).append("\t")
+	               .append(course.getCourseName()).append("\t")
+	               .append(course.getCourseProf()).append("\n")
+	    );
+
+	    return courses.toString();
     }
     
     /**
@@ -69,12 +73,14 @@ public class StudentOperations implements StudentInterface {
      */
     public String getReport(Student student) {
         //return student.getReport();
-    	String report="";
-    	ReportCard reportCard=sdi.getReport(student);
-    	for (Map.Entry<String, String> entry : reportCard.getGrades().entrySet()) {
-            report=report.concat(entry.getKey()+ ":" + entry.getValue());
-        }
-    	return report;
+    	StringBuilder report = new StringBuilder();
+        ReportCard reportCard = sdi.getReport(student);
+        
+        reportCard.getGrades().forEach((key, value) -> 
+            report.append(key).append(":").append(value).append("\n")
+        );
+
+        return report.toString();
     }
     
     /**
@@ -88,7 +94,7 @@ public class StudentOperations implements StudentInterface {
 			billing = sdi.getBillingInfo(student);
 	    	String status="Pending";
 	    	if(billing.isStatus())status="Completed";
-	    	return billing.getBillingID()+":"+billing.getBillamt()+":"+status;
+	    	return billing.getBillingID()+"\t"+billing.getBillamt()+"\t"+status;
 		} catch (BillingNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,15 +111,19 @@ public class StudentOperations implements StudentInterface {
 	@Override
 	public String viewCourses() {
 		// TODO Auto-generated method stub
-		String catalog="";
-		Set<Course> courses=sdi.viewCourses();
-		for (Course course : courses) {
+		StringBuilder catalog = new StringBuilder();
+	    Set<Course> courses = sdi.viewCourses();
+	    
+	    courses.forEach(course -> {
 	        String prof = course.getCourseProf();
-	        //System.out.println(course.getCourseID() + " " + course.getCourseName());
 	        if (prof == null) prof = "Prof Awaited";
-	        catalog = catalog.concat(course.getCourseID() + " " + course.getCourseName() + " " + prof + " " + String.valueOf(course.getSeats()) + "\n");
-	    }//System.out.println(catalog);
-		return catalog;
+	        catalog.append(course.getCourseID()).append("\t")
+	               .append(course.getCourseName()).append("\t\t")
+	               .append(prof).append("\t\t")
+	               .append(course.getSeats()).append("\n");
+	    });
+
+	    return catalog.toString();
 	}
 	
 	@Override

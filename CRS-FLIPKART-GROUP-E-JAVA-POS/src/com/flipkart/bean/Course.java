@@ -145,14 +145,6 @@ public class Course {
 	public float getPrice() {
 		return this.price;
 	}
-	/**
-	 * Method to determine if the course can be canceled
-	 * @return true if the course can be canceled, false otherwise
-	 */
-	public boolean canCancel() {
-		// Example criteria for cancellation: if the course has no students enrolled, it can be canceled
-		return enrolledStudents.isEmpty();
-	}
 	
 	public Set<String> getStudents(){
 		return enrolledStudents;

@@ -18,94 +18,110 @@ public class ClientApplication {
 	static Catalog catalog;
 	
 	public static void main(String[] args) {
-		int input=0;
-		String username = null,password = null;
-		userInstance=new UserOperations();
-		catalog=new Catalog();
-		while(input!=4) {
-			Scanner s=new Scanner(System.in);
+		int input = 0;
+		String username = null, password = null;
+		userInstance = new UserOperations();
+		catalog = new Catalog();
+		Scanner s = new Scanner(System.in);
+		
+		// Main menu loop
+		while (input != 4) {
 			System.out.println("Welcome to the CRS Application :-->");
 			System.out.println("Press 1:--> Login");
 			System.out.println("Press 2:--> Registration");
 			System.out.println("Press 3:--> Update Password");
 			System.out.println("Press 4:--> Exit");
-			input=s.nextInt();
-			switch(input) {
-			case 1:
-				System.out.println("Enter the Username :--");
-				username=s.next();
-				System.out.println("Enter the Password :--");
-				password=s.next();
-				login(username,password);
-				break;
-			case 2:
-				studentRegistraion();
-				break;
-			case 3:
-				updatePassword();
-				break;
-			case 4:
-				continue;
-			default:
-				System.out.println("Invalid commaand");
+			input = s.nextInt();
+			
+			switch (input) {
+				case 1:
+					System.out.println("Enter the Username :--");
+					username = s.next();
+					System.out.println("Enter the Password :--");
+					password = s.next();
+					login(username, password);
+					break;
+				case 2:
+					studentRegistraion();
+					break;
+				case 3:
+					updatePassword();
+					break;
+				case 4:
+					continue;
+				default:
+					System.out.println("Invalid command");
 			}
 		}
 	}
 	
-	public static void login(String username,String password) {
-		User user=userInstance.retrieve(username, password);
-		if(user.equals(null))System.out.println("Wrong username or password exiting main menu...");
-		if(user.getRole().equals("Student")){
-			if(!((Student)user).isApproved())return;
-			StudentMenu studentOps=new StudentMenu();
-			studentOps.studentMenu((Student)user);
-		}else if(user.getRole().equals("Professor")) {
-			ProfMenu profops= new ProfMenu();
-			profops.professorMenu((Prof)user);
-		}else if(user.getRole().equals("Admin")) {
-			AdminMenu adminops=new AdminMenu();
-			adminops.adminMenu((Admin)user);
+	/**
+	 * Handles user login based on username and password.
+	 * @param username The username of the user.
+	 * @param password The password of the user.
+	 */
+	public static void login(String username, String password) {
+		User user = userInstance.retrieve(username, password);
+		
+		if (user == null) {
+			System.out.println("Wrong username or password, exiting main menu...");
+			return;
+		}
+		
+		if (user.getRole().equals("Student")) {
+			if (!((Student)user).isApproved()) return;
+			StudentMenu studentOps = new StudentMenu();
+			studentOps.studentMenu((Student)user, username);
+		} else if (user.getRole().equals("Professor")) {
+			ProfMenu profops = new ProfMenu();
+			profops.professorMenu((Prof)user, username);
+		} else if (user.getRole().equals("Admin")) {
+			AdminMenu adminops = new AdminMenu();
+			adminops.adminMenu((Admin)user, username);
 		}
 	}
 	
+	/**
+	 * Handles student registration by taking user input and registering a new student.
+	 */
 	public static void studentRegistraion() {
-		Scanner s=new Scanner(System.in);
+		Scanner s = new Scanner(System.in);
 		System.out.println("Enter Username :");
-		String username=s.next();
+		String username = s.next();
 		s.nextLine();
 		System.out.println("Enter Name :");
-		String name=s.nextLine();
-		System.out.println("Enter Details in following format: \n<contact> <email> <branch> <password>");
+		String name = s.nextLine();
+		System.out.println("Enter Details in the following format: \n<contact> <email> <branch> <password>");
 		
 		String details = s.nextLine();
         
         // Split the details input into separate fields
         String[] detailsArray = details.split(" ");
         
-		String contact=detailsArray[0], email=detailsArray[1], 
-				branch= detailsArray[2],password=detailsArray[3];
-		//Student student=new Student(ID,name,contact,email,branch,rollNum,false,password);
-		System.out.println(userInstance.registerStudent(username,name,contact,email,password,branch));		
+		String contact = detailsArray[0], email = detailsArray[1], 
+				branch = detailsArray[2], password = detailsArray[3];
 		
+		System.out.println(userInstance.registerStudent(username, name, contact, email, password, branch));		
 	}
 	
+	/**
+	 * Handles password update for a user.
+	 * @param username The username of the user whose password needs to be updated.
+	 * @param password The old password of the user.
+	 * @param newPassword The new password to be set.
+	 */
 	public static void updatePassword() {
-		Scanner s=new Scanner(System.in);
-		String username = null,password = null;
+		Scanner s = new Scanner(System.in);
+		String username, password, newPassword;
 		System.out.println("Enter the Username :--");
-		username=s.next();
+		username = s.next();
 		System.out.println("Enter old Password :--");
-		password=s.next();
+		password = s.next();
 		System.out.println("Enter new Password :--");
-		String newPassword=s.next();
-		if(userInstance.changePassword(username,password,newPassword))System.out.println("Password changed successfully");
-	}
-	
-	public static UserOperations getUsers() {
-		return userInstance;
-	}
-	
-	public static Catalog getCatalog() {
-		return catalog;
+		newPassword = s.next();
+		
+		if (userInstance.changePassword(username, password, newPassword)) {
+			System.out.println("Password changed successfully");
+		}
 	}
 }

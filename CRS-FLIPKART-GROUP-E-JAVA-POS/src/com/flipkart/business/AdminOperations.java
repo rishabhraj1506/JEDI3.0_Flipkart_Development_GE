@@ -1,11 +1,13 @@
 package com.flipkart.business;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.flipkart.bean.*;
 import com.flipkart.dao.AdminDaoServices;
+import com.flipkart.exception.CourseAlreadyExistsException;
+import com.flipkart.exception.CourseNotFoundException;
+import com.flipkart.exception.UserAlreadyExistsException;
+import com.flipkart.exception.UserNotFoundException;
 import com.flipkart.dao.AdminDaoInterface;
 
 public class AdminOperations implements AdminInterface{
@@ -16,10 +18,16 @@ public class AdminOperations implements AdminInterface{
 	AdminDaoInterface adi=new AdminDaoServices();
 	
     public String addProf(Prof prof, String username) {
-		String userID=adi.addProf(prof, username);
-    	if(!userID.isEmpty())return "Professor Added with id: "+userID;
-    	return "Operation Failed...";
-    	//userInstance.makeNew(username,(User)prof);
+		String userID;
+		try {
+			userID = adi.addProf(prof, username);
+			if(!userID.isEmpty())return "Professor Added with id: "+userID;
+		} catch (UserAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    		return "Operation Failed...";
+    		//userInstance.makeNew(username,(User)prof);
     }
 
     /**
@@ -29,7 +37,12 @@ public class AdminOperations implements AdminInterface{
      */
     public String removeProf(String profID) {
     	//prof.setRole("user");
-    	if(adi.removeProf(profID))return "Professor removed successfully";
+    	try {
+			if(adi.removeProf(profID))return "Professor removed successfully";
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return "Operation Failed..."; // Professor ID not found
     }
 
@@ -42,7 +55,12 @@ public class AdminOperations implements AdminInterface{
     public String updateCourse(String courseID, Course updatedCourse) {
         //catalog.removeCourse(courseCode);
         //catalog.addCourse(updatedCourse);
-    	if(adi.updateCourse(courseID, updatedCourse))return "Course information updated successfully";
+    	try {
+			if(adi.updateCourse(courseID, updatedCourse))return "Course information updated successfully";
+		} catch (CourseAlreadyExistsException | CourseNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return "Operation Failed...";
     }
 
@@ -53,7 +71,12 @@ public class AdminOperations implements AdminInterface{
     public String addCourse(Course course) {
     	//
     	//catalog.addCourse(course);
-    	if(adi.addCourse(course))return "Course added Successfully";
+    	try {
+			if(adi.addCourse(course))return "Course added Successfully";
+		} catch (CourseAlreadyExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return "Operation Failed...";
     }
 
@@ -64,7 +87,12 @@ public class AdminOperations implements AdminInterface{
      */
     public String removeCourse(String courseID) {
         //return catalog.removeCourse(courseCode);
-    	if(adi.removeCourse(courseID))return "Course removed Successfully";
+    	try {
+			if(adi.removeCourse(courseID))return "Course removed Successfully";
+		} catch (CourseNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return "Operation Failed...";
     }
 
@@ -73,7 +101,12 @@ public class AdminOperations implements AdminInterface{
      * @param student: the student to register
      */
     public String registerStudent(String studentID) {
-    	if(adi.registerStudent(studentID))return "Student approved";
+    	try {
+			if(adi.registerStudent(studentID))return "Student approved";
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return "Operation Failed...";
     	//student.setApproved(true);
     }
@@ -81,35 +114,42 @@ public class AdminOperations implements AdminInterface{
 	@Override
 	public String viewCourses() {
 		// TODO Auto-generated method stub
-		String catalog="";
-		Set<Course> courses=adi.viewCourses();
-		for (Course course : courses) {
-	        String prof = course.getCourseProf();
-	        //System.out.println(course.getCourseID() + " " + course.getCourseName());
-	        if (prof == null) prof = "Prof Awaited";
-	        catalog = catalog.concat(course.getCourseID() + " " + course.getCourseName() + " " + prof + " " + String.valueOf(course.getSeats()) + "\n");
-	    }//System.out.println(catalog);
-		return catalog;
+		Set<Course> courses = adi.viewCourses();
+        StringBuilder catalog = new StringBuilder();
+        courses.forEach(course -> {
+            String prof = course.getCourseProf();
+            if (prof == null) prof = "Prof Awaited";
+            catalog.append(course.getCourseID()).append("\t")
+                   .append(course.getCourseName()).append("\t\t")
+                   .append(prof).append("\t\t")
+                   .append(course.getSeats()).append("\n");
+        });
+        return catalog.toString().trim(); 
 	}
 	
 	@Override
 	public String viewProfessors() {
 		// TODO Auto-generated method stub
-		String catalog="";
-		Set<Prof> profs=adi.viewProfessors();
-		for (Prof prof : profs) {
-	        catalog = catalog.concat(prof.getName() + " " + prof.getID() + " " + prof.getDept() + "\n");
-	    }//System.out.println(catalog);
-		return catalog;
+        Set<Prof> profs = adi.viewProfessors();
+        StringBuilder catalog = new StringBuilder();
+        profs.forEach(prof -> 
+            catalog.append(prof.getName()).append("\t\t")
+                   .append(prof.getID()).append("\t\t")
+                   .append(prof.getDept()).append("\n")
+        );
+        return catalog.toString().trim(); 
 	}
 
 	@Override
 	public String viewUnapprovedStudents() {
 		// TODO Auto-generated method stub
-		Set<Student> studentList=adi.viewUnapprovedStudents();
-    	String students="";
-    	for(Student student:studentList) {
-    		students=students.concat(student.getID()+":"+student.getName()+":"+student.getRollNum());
-    	}return students;
+		Set<Student> studentList = adi.viewUnapprovedStudents();
+        StringBuilder students = new StringBuilder();
+        studentList.forEach(student -> 
+            students.append(student.getID()).append("\t\t")
+                    .append(student.getName()).append("\t\t")
+                    .append(student.getRollNum()).append("\n")
+        );
+        return students.toString().trim();
 	}
 }

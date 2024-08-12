@@ -51,21 +51,17 @@ public class UserOperations implements UserInterface{
 	}
 	
 	public User findByID(String id) {
-		for (Map.Entry<String, User> entry : users.entrySet()) {
-            User user = entry.getValue();
-            if (user.getID().equals(id)) {
-                return user; // Return the user if the ID matches
-            }
-        }
-        return null;
+		return users.values().stream()
+	            .filter(user -> user.getID().equals(id))
+	            .findFirst()
+	            .orElse(null);
 	}
 	
 	public void printUsers() {
-		for (Map.Entry<String, User> entry : users.entrySet()) {
-            User user = entry.getValue();
-			if(user.getRole()!="Student")continue;
-			Student stu=(Student)user;
-            System.out.println(stu.getID()+"-"+stu.getName());
-        }
+		users.entrySet().stream()
+        .map(Map.Entry::getValue)
+        .filter(user -> "Student".equals(user.getRole()))
+        .map(user -> (Student) user)
+        .forEach(stu -> System.out.println(stu.getID() + "-" + stu.getName()));
 	}
 }

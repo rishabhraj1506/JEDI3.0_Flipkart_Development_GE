@@ -33,10 +33,4 @@ public class Admin extends User {
         // Code to change admin password
     	super.setPassword(password);
     }
-
-
-    /*@Override
-    public void login() {
-        // Code for admin login
-    }*/
 }

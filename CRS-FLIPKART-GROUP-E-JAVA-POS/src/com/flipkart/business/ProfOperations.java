@@ -40,11 +40,14 @@ public class ProfOperations implements ProfInterface{
      */
     public String getStudents(String courseID, Prof prof) {
     	//return prof.getRegisteredStudents(courseID);
-    	Set<Student> studentList=pdi.getStudents(courseID, prof);
-    	String students="";
-    	for(Student student:studentList) {
-    		students=students.concat(student.getID()+":"+student.getName()+":"+student.getRollNum());
-    	}return students;
+    	Set<Student> studentList = pdi.getStudents(courseID, prof);
+        StringBuilder students = new StringBuilder();
+        studentList.forEach(student -> 
+            students.append(student.getID()).append("\t")
+                    .append(student.getName()).append("\t\t")
+                    .append(student.getRollNum()).append("\n")
+        );
+        return students.toString().trim(); 
     }
 
     /**
@@ -79,24 +82,28 @@ public class ProfOperations implements ProfInterface{
     @Override
 	public String viewCourses() {
 		// TODO Auto-generated method stub
-		String catalog="";
-		Set<Course> courses=pdi.viewCourses();
-		for(Course course:courses) {
-			String prof=course.getCourseProf();
-			if(prof==null)prof="Prof Awaited";
-			catalog=catalog.concat(course.getCourseID()+" "+course.getCourseName()+" "+prof+" "+course.getSeats()+"\n");
-		}
-		return catalog;
+    	Set<Course> courses = pdi.viewCourses();
+        StringBuilder catalog = new StringBuilder();
+        courses.forEach(course -> {
+            String prof = course.getCourseProf();
+            if (prof == null) prof = "Prof Awaited";
+            catalog.append(course.getCourseID()).append("\t")
+                   .append(course.getCourseName()).append("\t\t")
+                   .append(prof).append("\t\t")
+                   .append(course.getSeats()).append("\n");
+        });
+        return catalog.toString().trim();
 	}
 
 	@Override
 	public String viewCourseOffering(Prof prof) {
 		// TODO Auto-generated method stub
-		String catalog="";
-		Set<Course> courses=pdi.viewCourseOffering(prof);
-		for(Course course:courses) {
-			catalog=catalog.concat(course.getCourseID()+" "+course.getCourseName()+"\n");
-		}
-		return catalog;
+		Set<Course> courses = pdi.viewCourseOffering(prof);
+        StringBuilder catalog = new StringBuilder();
+        courses.forEach(course -> 
+            catalog.append(course.getCourseID()).append("\t")
+                   .append(course.getCourseName()).append("\n")
+        );
+        return catalog.toString().trim();
 	}
 }
