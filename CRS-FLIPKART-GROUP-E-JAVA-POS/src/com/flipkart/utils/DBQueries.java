@@ -69,7 +69,7 @@ public class DBQueries {
 	
 	public static final String UPDATE_BILLING_INFO = "UPDATE billing SET billamt = ?, status = ?, transactionID = ? WHERE billingID = ?";
 	
-	public static final String VIEW_UNAPPROVED_STUDENTS ="SELECT * FROM student WHERE approved=0";
+	public static final String VIEW_UNAPPROVED_STUDENTS ="SELECT * FROM student JOIN user ON student.userID=user.userID WHERE approved=0";
 	
 	public static final String VIEW_PROF_LIST = "SELECT * FROM professor JOIN user ON professor.userID=user.userID";
 	

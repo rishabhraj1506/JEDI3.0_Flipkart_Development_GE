@@ -24,7 +24,7 @@ public class AdminOperations implements AdminInterface{
 			if(!userID.isEmpty())return "Professor Added with id: "+userID;
 		} catch (UserAlreadyExistsException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
     		return "Operation Failed...";
     		//userInstance.makeNew(username,(User)prof);
@@ -41,7 +41,7 @@ public class AdminOperations implements AdminInterface{
 			if(adi.removeProf(profID))return "Professor removed successfully";
 		} catch (UserNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
     	return "Operation Failed..."; // Professor ID not found
     }
@@ -59,7 +59,7 @@ public class AdminOperations implements AdminInterface{
 			if(adi.updateCourse(courseID, updatedCourse))return "Course information updated successfully";
 		} catch (CourseAlreadyExistsException | CourseNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
     	return "Operation Failed...";
     }
@@ -75,7 +75,7 @@ public class AdminOperations implements AdminInterface{
 			if(adi.addCourse(course))return "Course added Successfully";
 		} catch (CourseAlreadyExistsException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
     	return "Operation Failed...";
     }
@@ -91,7 +91,7 @@ public class AdminOperations implements AdminInterface{
 			if(adi.removeCourse(courseID))return "Course removed Successfully";
 		} catch (CourseNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
     	return "Operation Failed...";
     }
@@ -105,7 +105,7 @@ public class AdminOperations implements AdminInterface{
 			if(adi.registerStudent(studentID))return "Student approved";
 		} catch (UserNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
     	return "Operation Failed...";
     	//student.setApproved(true);

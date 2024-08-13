@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 
 import com.flipkart.bean.Billing;
 import com.flipkart.bean.Course;
@@ -72,17 +70,20 @@ public class StudentDaoServices implements StudentDaoInterface{
 	public List<Course> viewCoursesEnrolled(Student student) {
 		// TODO Auto-generated method stub
 		try {
+			List<Course> courseList = new ArrayList<Course>();
+
 			PreparedStatement ps = conn.prepareStatement(DBQueries.GET_COURSE_ENROLLED);
+			
 			ps.setString(1, student.getID());
+
 			ResultSet rs = ps.executeQuery();
 
-			List<Course> courseList = new ArrayList<>();
 			while (rs.next()) {
-			    courseList.add(new Course(rs.getString("catalog.courseID"), rs.getString("catalog.courseName"), rs.getString("catalog.courseProf"), rs.getInt("catalog.seats")));
+				Course course=new Course(rs.getString("catalog.courseID"),rs.getString("catalog.courseName"),rs.getString("catalog.courseProf"),rs.getInt("catalog.seats"));
+				courseList.add(course);
+
 			}
-
-			return courseList.stream().collect(Collectors.toList());
-
+			return courseList;
 		} catch (SQLException e) {
 			return null;
 		}
@@ -134,16 +135,19 @@ public class StudentDaoServices implements StudentDaoInterface{
 	public Set<Course> viewCourses() {
 		// TODO Auto-generated method stub
 		try {
-			PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
-			ResultSet rs = ps.executeQuery();
-
-			Set<Course> courseList = new HashSet<>();
-			while (rs.next()) {
-			    courseList.add(new Course(rs.getString("courseID"), rs.getString("courseName"), rs.getString("courseProf"), rs.getInt("seats")));
-			}
-
-			return courseList.stream().collect(Collectors.toSet());
-
+			Set<Course> courseList = new HashSet<Course>();
+            PreparedStatement ps = conn.prepareStatement(DBQueries.VIEW_COURSE_CATALOG);
+            //ps.setString(1, courseID);
+            ResultSet rs = ps.executeQuery(); 
+            
+            while(rs.next())
+            {
+            	Course course=new Course(rs.getString("courseID"),rs.getString("courseName"),rs.getString("courseProf"),rs.getInt("seats"));
+            	//System.out.println(course.getCourseID()+" "+course.getCourseName());
+            	courseList.add(course);
+            }
+            
+            return courseList;
             
         } catch (SQLException e) {
     		return null;

@@ -32,13 +32,13 @@ public class StudentOperations implements StudentInterface {
 				temp = sdi.register(student, courseID);
 			} catch (CourseAlreadyOptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e.getMessage();
 			} catch (CourseNotAvailableException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e.getMessage();
 			} catch (CourseNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				e.getMessage();
 			}
 			count++;
 			confirmedRegistration=confirmedRegistration.concat(courseID+"\n");
@@ -97,7 +97,7 @@ public class StudentOperations implements StudentInterface {
 	    	return billing.getBillingID()+"\t"+billing.getBillamt()+"\t"+status;
 		} catch (BillingNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return null;
     }
@@ -150,7 +150,7 @@ public class StudentOperations implements StudentInterface {
 		    }
 		} catch (BillingNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage();
 		}
 		return null;
 
@@ -160,11 +160,13 @@ public class StudentOperations implements StudentInterface {
 	@Override
 	public float getCoursePricing(Student student) {
 		// TODO Auto-generated method stub
-		List<Course> courseList = sdi.viewCoursesEnrolled(student);
-
-		return courseList.stream()
-		                 .map(Course::getPrice)
-		                 .reduce(0.0f, Float::sum);
-
+		float price=0;
+    	List<Course> courseList=sdi.viewCoursesEnrolled(student);
+    	for(Course course:courseList) {
+    		price+=course.getPrice();
+    	}
+    	return price;
 	}
 }
+
+

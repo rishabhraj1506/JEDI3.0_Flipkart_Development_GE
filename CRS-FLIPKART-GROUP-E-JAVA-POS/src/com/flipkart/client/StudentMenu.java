@@ -90,25 +90,22 @@ class StudentMenu {
 
 		for (int count = 0; count < 6; count++) {
 			System.out.println(studentService.viewCourses());
-            String courseType = (count < 4) ? "primary" : "secondary";
-            System.out.printf("Select %s course %d from catalog:%n", courseType, (count < 4) ? (count + 1) : (count - 3));
-            return s.next();
+			if (count < 4) {
+				System.out.println("Select primary course " + (count + 1) + " from catalog:");
+			} else {
+				System.out.println("Select secondary course " + (count - 3) + " from catalog:");
+			}
 			String courseID = s.next();
 			courses.add(courseID);
 		}
 
 		String registered = studentService.register(student, courses);
-		float price = Arrays.stream(registered.split("\n"))
-                .filter(line -> line.startsWith("price:"))
-                .map(line -> line.split(" ")[1])
-                .map(Float::parseFloat)
-                .findFirst()
-                .orElse(0.0f);
+		String[] splitArray = registered.split("\n");
+		String floatval = splitArray[splitArray.length - 1].split(" ")[1];
+		float price = Float.parseFloat(floatval);
 		
 		System.out.println("Following courses were registered successfully:");
 		System.out.println(registered);
-	    System.out.printf("Total registration cost: %.2f%n", price);
-
 	}
 
 	/**

@@ -2,8 +2,6 @@ package com.flipkart.client;
 
 import java.time.LocalDateTime;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.flipkart.bean.Catalog;
 import com.flipkart.bean.Course;
@@ -74,11 +72,7 @@ public class ProfMenu {
 		Scanner s = new Scanner(System.in);
 		String courseID = s.next();
 		String studentList = profService.getStudents(courseID, prof);
-		String formattedStudentList = Stream.of(studentList.split(","))
-                .map(String::trim)
-                .collect(Collectors.joining("\n"));
-
-		System.out.println("Registered Students:\n" + formattedStudentList);
+		System.out.println(studentList);
 	}
 
 	/**
