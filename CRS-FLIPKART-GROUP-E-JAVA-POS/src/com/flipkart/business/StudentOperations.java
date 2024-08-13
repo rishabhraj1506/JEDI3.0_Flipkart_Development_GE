@@ -32,13 +32,13 @@ public class StudentOperations implements StudentInterface {
 				temp = sdi.register(student, courseID);
 			} catch (CourseAlreadyOptedException e) {
 				// TODO Auto-generated catch block
-				e.getMessage();
+				System.out.println(e.getMessage());
 			} catch (CourseNotAvailableException e) {
 				// TODO Auto-generated catch block
-				e.getMessage();
+				System.out.println(e.getMessage());
 			} catch (CourseNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.getMessage();
+				System.out.println(e.getMessage());
 			}
 			count++;
 			confirmedRegistration=confirmedRegistration.concat(courseID+"\n");
@@ -97,7 +97,7 @@ public class StudentOperations implements StudentInterface {
 	    	return billing.getBillingID()+"\t"+billing.getBillamt()+"\t"+status;
 		} catch (BillingNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		return null;
     }
@@ -150,7 +150,7 @@ public class StudentOperations implements StudentInterface {
 		    }
 		} catch (BillingNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		return null;
 

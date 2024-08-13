@@ -10,6 +10,6 @@ public class UsernameAlreadyInUseException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Email: " + username + " is already in use.";
+        return "username: " + username + " is already in use.";
     }
 }

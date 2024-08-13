@@ -69,7 +69,7 @@ public class AdminMenu {
 		System.out.println(adminService.viewUnapprovedStudents());
 		System.out.println("Student ID for approval:");
 		String studentID = s.next();
-		adminService.registerStudent(studentID);
+		System.out.println(adminService.registerStudent(studentID));
 	}
 
 	/**

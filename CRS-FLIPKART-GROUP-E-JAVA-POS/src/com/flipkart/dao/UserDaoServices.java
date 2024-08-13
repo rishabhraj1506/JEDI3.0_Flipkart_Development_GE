@@ -39,7 +39,9 @@ public class UserDaoServices implements UserDaoInterface{
 				
 				if(role.equals("Student")) {
 					user=getStudent(userID,name,role,contact,email,password);
-					if(!((Student) user).isApproved())throw new StudentNotApprovedException(userID);
+					if(!((Student) user).isApproved()) {
+						throw new StudentNotApprovedException(userID);
+					}
 				}
 				else if(role.equals("Professor")) {
 					user=getProfessor(userID,name,role,contact,email,password);
@@ -47,7 +49,7 @@ public class UserDaoServices implements UserDaoInterface{
 				else if(role.equals("Admin")) {
 					user=getAdmin(userID,name,role,contact,email,password);
 				}
-				return null;
+				return user;
 			}
 			else {
 				throw new UserNotFoundException(username);

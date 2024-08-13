@@ -22,7 +22,7 @@ public class UserOperations implements UserInterface{
 				return user;
 		} catch (UserNotFoundException | StudentNotApprovedException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		} 
 		return null;
 	}
@@ -36,7 +36,7 @@ public class UserOperations implements UserInterface{
 			return udi.updatePassword(username, password, newPassword);
 		} catch (UserNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		return false;
 	}
@@ -47,7 +47,7 @@ public class UserOperations implements UserInterface{
 			return udi.registerStudent(username, name, contact, email, password, branch);
 		} catch (UsernameAlreadyInUseException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		return null;
 	}

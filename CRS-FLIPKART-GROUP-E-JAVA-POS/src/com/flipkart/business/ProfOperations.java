@@ -27,7 +27,7 @@ public class ProfOperations implements ProfInterface{
 			if(pdi.offerCourse(courseID, prof))return "Course enrolled successfully";
 		} catch (CourseNotAvailableException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
         return "Enrollment failed...";
         //
@@ -71,10 +71,10 @@ public class ProfOperations implements ProfInterface{
 			if(pdi.giveGrade(courseID, studentID, grade, prof))return "Grade submitted successfully";
 		} catch (CourseNotOptedException | GradeAlreadyAddedException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		} catch (CourseNotOfferedException e) {
 			// TODO Auto-generated catch block
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
     	return "Grade submission failed...";
     }
