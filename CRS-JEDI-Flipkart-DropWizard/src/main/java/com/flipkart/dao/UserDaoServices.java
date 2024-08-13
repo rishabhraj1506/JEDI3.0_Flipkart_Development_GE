@@ -47,7 +47,7 @@ public class UserDaoServices implements UserDaoInterface{
 				else if(role.equals("Admin")) {
 					user=getAdmin(userID,name,role,contact,email,password);
 				}
-				return null;
+				return user;
 			}
 			else {
 				throw new UserNotFoundException(username);
