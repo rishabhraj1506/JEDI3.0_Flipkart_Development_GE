@@ -16,7 +16,7 @@ public interface UserInterface {
      * @param password The password of the user.
      * @return A `User` object if the username and password match an existing user; `null` otherwise.
      */
-    public User retrieve(String username, String password);
+    public User retrieve(String username, String password) ;
     
     /**
      * Creates a new user and adds them to the system.

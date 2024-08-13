@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.flipkart.bean.*;
 import com.flipkart.dao.UserDaoServices;
+import com.flipkart.exception.StudentNotApprovedException;
 import com.flipkart.exception.UserNotFoundException;
 import com.flipkart.exception.UsernameAlreadyInUseException;
 import com.flipkart.dao.UserDaoInterface;
@@ -17,12 +18,13 @@ public class UserOperations implements UserInterface{
 		User user;
 		try {
 			user = udi.getUser(username);
-			if(password.equals(user.getPassword())) 
+			if(user!=null&&password.equals(user.getPassword())) 
 				return user;
-		} catch (UserNotFoundException e) {
+		} catch (UserNotFoundException | StudentNotApprovedException e) {
 			// TODO Auto-generated catch block
 			e.getMessage();
-		}return null;
+		} 
+		return null;
 	}
 	
 	public void makeNew(String username, User user){
